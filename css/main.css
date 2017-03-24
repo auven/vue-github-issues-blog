@@ -1,0 +1,13 @@
+#content {
+    max-width: 700px;
+    width: 95%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #d1d5da;
+    border-radius: 3px;
+}
+
+#content img {
+    width: 100%;
+}
