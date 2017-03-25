@@ -54,6 +54,7 @@
         <div class="page">
             <ul>
                 <li :class="{'f': prev === false}"><a :href="'#/page/' + (parseInt(p)-1)">上一页</a></li>
+                <li v-for="n in ps"><a :href="'#/page/' + n">{{ n }}</a></li>
                 <li :class="{'f': next === false}"><a :href="'#/page/' + (parseInt(p)+1)">下一页</a></li>
             </ul>
         </div>
@@ -248,11 +249,6 @@
                 this.$http.get("https://api.github.com/repos/"+_config['owner']+"/"+_config['repo']).then(function (response) {
                     this.ps = Math.ceil((response.data.open_issues)/_config['per_page']);
                     console.log(this.ps, "这个是Pages");
-                    var pageHTML = '';
-                    for (var i = 1; i <= this.ps; i++) {
-                        pageHTML += '<li><a href="#/page/' + i + '">'+ i +'</a></li>';
-                    }
-                    $(".page li:eq(0)").after(pageHTML);
                 }, function (response) {
 
                 });
