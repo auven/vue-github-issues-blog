@@ -1,3 +1,36 @@
+var EventUtil = {
+    addHandler: function (element, type, handler) {
+        if (element.addEventListener) {
+            element.addEventListener(type, handler, false);
+        } else if (element.attachEvent) {
+            element.attachEvent("on" + type, handler);
+        } else {
+            element["on" + type] = handler;
+        }
+    },
+    /**
+     / THIRD FUNCTION
+     * getPageScroll() by quirksmode.com
+     *
+     * @return Array Return an array with x,y page scroll values.
+     */
+    getPageScroll: function () {
+        var xScroll, yScroll;
+        if (self.pageYOffset) {
+            yScroll = self.pageYOffset;
+            xScroll = self.pageXOffset;
+        } else if (document.documentElement && document.documentElement.scrollTop) { // Explorer 6 Strict
+            yScroll = document.documentElement.scrollTop;
+            xScroll = document.documentElement.scrollLeft;
+        } else if (document.body) {// all other Explorers
+            yScroll = document.body.scrollTop;
+            xScroll = document.body.scrollLeft;
+        }
+        arrayPageScroll = new Array(xScroll, yScroll);
+        return arrayPageScroll;
+    }    
+};
+
 // 创建axios实例
 const service = axios.create({
     baseURL: 'https://api.github.com/repos/', // api的base_url
@@ -66,7 +99,8 @@ var app = new Vue({
             prev: false,
             next: false,
             G: { post: {}, postList: {} },
-            detailData: ''
+            detailData: '',
+            isSmTitle: false
         }
     },
     watch: {
@@ -90,7 +124,7 @@ var app = new Vue({
                     // DOM 还没有更新
                     this.$nextTick(function () {
                         // DOM 现在更新了
-                        this.hl(this.$refs.detail);                              
+                        this.hl(this.$refs.detail);
                     })
 
                     this.loading = false;
@@ -193,5 +227,16 @@ var app = new Vue({
                 hljs.highlightBlock($codes[i]);
             }
         }
+    },
+    mounted: function () {
+        var _this = this;
+        var distance = _this.$refs.indexTitle.offsetTop - _this.$refs.indexHeader.clientHeight;
+        EventUtil.addHandler(document, 'scroll', function () {
+            if (EventUtil.getPageScroll()[1] >= distance) {
+                _this.isSmTitle = true;
+            } else {
+                _this.isSmTitle = false;
+            }
+        })
     }
 }).$mount('#app')

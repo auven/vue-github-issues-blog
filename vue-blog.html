@@ -23,42 +23,51 @@
 <body>
 
     <div id="app">
-
-        <div class="header">
-            <a href="#/">我的个人博客</a>
-        </div>
-
-        <div class="listPage" v-show="listPage">
-            <ul>
-                <li v-for="item in baseData">
-                    <a :href="'#/detail/' + item.number">{{ item.title }}</a>
-                </li>
-            </ul>
-
-            <div class="page">
-                <ul>
-                    <li :class="{'f': prev === false}">
-                        <a :href="'#/page/' + (parseInt(p)-1)">上一页</a>
-                    </li>
-                    <li v-for="n in ps">
-                        <a :href="'#/page/' + n">{{ n }}</a>
-                    </li>
-                    <li :class="{'f': next === false}">
-                        <a :href="'#/page/' + (parseInt(p)+1)">下一页</a>
-                    </li>
-                </ul>
+        <div class="index">
+            <div class="header" ref="indexHeader">
+                <a class="title" href="#/" v-if="isSmTitle">我的个人博客</a>
             </div>
+            <div class="header-bg">
+                <a class="title" href="#/" ref="indexTitle" v-if="!isSmTitle">我的个人博客</a>
+            </div>
+            <transition name="fade">
+                <div class="listPage container" v-show="listPage">
+                    <ul>
+                        <li v-for="item in baseData">
+                            <a class="blog-list-item" :href="'#/detail/' + item.number">{{ item.title }}</a>
+                        </li>
+                    </ul>
+                    <div class="page-num">
+                        <ul>
+                            <li :class="{'f': prev === false}">
+                                <a :href="'#/page/' + (parseInt(p)-1)">上一页</a>
+                            </li>
+                            <li v-for="n in ps">
+                                <a :href="'#/page/' + n">{{ n }}</a>
+                            </li>
+                            <li :class="{'f': next === false}">
+                                <a :href="'#/page/' + (parseInt(p)+1)">下一页</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </transition>
+            <transition name="slide-fade">
+                <div class="container" v-show="detailPage">
+                    <div class="detail" v-html="detailData" ref="detail"></div>
+                </div>
+            </transition>
         </div>
-
-
-
-        <div class="detail" v-show="detailPage">
-            <div id="detail" v-html="detailData" ref="detail"></div>
-        </div>
-
-
-        <div class="loading" v-show="loading">loading......</div>
-
+        <transition name="fade">
+            <div class="loading" v-show="loading">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div>
+        </transition>
     </div>
 
     <script src="js/index.js"></script>
