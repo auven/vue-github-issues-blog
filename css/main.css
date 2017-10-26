@@ -11,3 +11,42 @@
 #content img {
     width: 100%;
 }
+
+#detail {
+    max-width: 700px;
+    width: 95%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #d1d5da;
+    border-radius: 3px;
+}
+
+#detail img {
+    width: 100%;
+}
+
+.f {
+    background: red;
+}
+
+code.hljs {
+    border-radius: 3px;
+}
+
+p>code.hljs {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    margin: 0;
+    font-size: 85%;
+    /* background-color: rgba(27,31,35,0.05); */
+}
+
+p>code.hljs::before,
+p>code.hljs::after {
+    letter-spacing: -0.2em;
+    content: "\00a0";
+}
