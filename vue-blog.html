@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>vue-blog</title>
@@ -29,7 +30,8 @@
 
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
-    <script src="https://cdn.jsdelivr.net/vue.resource/1.2.1/vue-resource.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/vue.resource/1.2.1/vue-resource.min.js"></script> -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <script src="js/jquery-3.2.0.min.js"></script>
     <script type="text/javascript" src="js/marked.min.js"></script>
@@ -38,230 +40,293 @@
 
 
 </head>
+
 <body>
 
-<div id="app">
+    <div id="app">
 
-    <div class="header"><a href="#">我的个人博客</a></div>
-
-    <div class="listPage" v-show="listPage">
-        <ul>
-            <li v-for="item in baseData">
-                <a :href="'#/detail/' + item.number">{{ item.title }}</a>
-            </li>
-        </ul>
-
-        <div class="page">
-            <ul>
-                <li :class="{'f': prev === false}"><a :href="'#/page/' + (parseInt(p)-1)">上一页</a></li>
-                <li v-for="n in ps"><a :href="'#/page/' + n">{{ n }}</a></li>
-                <li :class="{'f': next === false}"><a :href="'#/page/' + (parseInt(p)+1)">下一页</a></li>
-            </ul>
+        <div class="header">
+            <a href="#/">我的个人博客</a>
         </div>
+
+        <div class="listPage" v-show="listPage">
+            <ul>
+                <li v-for="item in baseData">
+                    <a :href="'#/detail/' + item.number">{{ item.title }}</a>
+                </li>
+            </ul>
+
+            <div class="page">
+                <ul>
+                    <li :class="{'f': prev === false}">
+                        <a :href="'#/page/' + (parseInt(p)-1)">上一页</a>
+                    </li>
+                    <li v-for="n in ps">
+                        <a :href="'#/page/' + n">{{ n }}</a>
+                    </li>
+                    <li :class="{'f': next === false}">
+                        <a :href="'#/page/' + (parseInt(p)+1)">下一页</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <div class="detail" v-show="detailPage">
+            <div id="detail" v-html="detailData" ref="detail"></div>
+        </div>
+
+
+        <div class="loading" v-show="loading">loading......</div>
+
     </div>
 
+    <script>
 
+        hljs.initHighlightingOnLoad();
 
-    <div class="detail" v-show="detailPage">
-        <div id="detail" ></div>
-    </div>
+        // Vue.http.headers.common['Authorization'] = 'token f93c9396e5ea7a56276bfd1ec2da4bc1fba0d287';
 
-
-    <div class="loading" v-show="loading">loading......</div>
-
-</div>
-
-<script>
-
-   // Vue.http.headers.common['Authorization'] = _config['access_token'];
-
-
-
-    /* -------------------------------------------------------------------------------*/
-
-    var rendererMD = new marked.Renderer();
-    marked.setOptions({
-        renderer: rendererMD,
-        gfm: true,
-        tables: true,
-        breaks: false,
-        pedantic: false,
-        sanitize: false,
-        smartLists: true,
-        smartypants: false
-    });//基本设置
-
-    function hl() {
-        $('pre code').each(function(i, block) {
-            hljs.highlightBlock(block);
+        // 创建axios实例
+        const service = axios.create({
+            baseURL: 'https://api.github.com/repos/', // api的base_url
+            timeout: 15000                  // 请求超时时间
         });
-    }
 
-    /* --------------------------------------------------------------------------------- */
+        // request拦截器
+        service.interceptors.request.use(config => {
+            config.headers['Authorization'] = 'token f93c9396e5ea7a56276bfd1ec2da4bc1fba0d287'; // 让每个请求携带自定义token 请根据实际情况自行修改
+            return config;
+        }, error => {
+            // Do something with request error
+            console.log(error); // for debug
+            Promise.reject(error);
+        })
 
+        /* -------------------------------------------------------------------------------*/
 
-    // 文章详情组件, 如果在这里配置watch等，只会监听这个组件的，所以我将watch等放到了app里，这样所有的都会监听到
-//    var detail = {
-//        template: '<div>{{ $route.params.issuesID }} </div>'
-//    };
+        var rendererMD = new marked.Renderer();
+        marked.setOptions({
+            renderer: rendererMD,
+            gfm: true,
+            tables: true,
+            breaks: false,
+            pedantic: false,
+            sanitize: false,
+            smartLists: true,
+            smartypants: false,
+            // highlight: function (code) {
+            //     return hljs.highlightAuto(code).value;
+            // }
+        });//基本设置
 
-    // 设置路由
-    var router = new VueRouter({
-        routes: [
-            {
-                path: '/detail/:issuesID',
-                name: 'detail'
-                // component: detail
-                // 这里我可以不指定组件，一样可以建立路由,所以我决定将detail组件删除
-            },
-            {
-                path: '/page/:pageID',
-                name: 'page'
-            }
-        ]
-    })
+        // 如果直接在option中设置highlight，没办法添加代码背景高亮，所以。。我还是不采取这种方式。
 
+        function hl() {
+            $('pre code').each(function (i, block) {
+                hljs.highlightBlock(block);
+            });
+        }
 
-
-    // 注意：data里的数据要使用，必须return出来，在能在初始的时候使用
-    var app = new Vue({
-        router,
-        data: function() {
-            return {
-                baseData: {},
-                listPage: false,
-                detailPage: false,
-                loading: true,
-                ps: 1,
-                p: 1,
-                prev: false,
-                next: false,
-                G: { post: {}, postList: {}}
-            }
-        },
-        watch: {
-            '$route': 'fetchList'
-        },
-        created: function() {
-            this.getPages();
-            this.fetchList();
-            this.con();
-        },
-        methods: {
-            fetchList: function() {
-
-                if(this.$route.params.issuesID) {
-
-                    var issID = this.$route.params.issuesID;
-
-                    if (this.G.post[issID] !== undefined) {
-                        $('#detail').html(marked(this.G.post[issID].body));
-
-                        hl();
-
-                        this.loading = false;
-                        this.listPage = false;
-                        this.detailPage = true;
-
-                        return;
-                    }
-
-                    this.loading = true;
-                    this.listPage = false;
-                    this.detailPage = false;
-
-                    this.$http.get("https://api.github.com/repos/"+ _config['owner'] + "/"+ _config['repo'] + "/issues/" + this.$route.params.issuesID ).then(function (response) {
-
-                        this.loading = false;
-                        this.listPage = false;
-                        this.detailPage = true;
-
-                        // 响应成功回调
-                        $('#detail').html(marked(response.data.body)); // 将markdown转化为html
-
-                        hl(); //为生成的markdown添加代码高亮
-                    }, function (response) {
-                        // 响应错误回调
-                    });
-                } else if(this.$route.params.pageID || true) {
-
-                    var pID = this.$route.params.pageID || 1;
-
-                    if (this.G.postList[pID] !== undefined) {
-                        this.baseData = this.G.postList[pID];
-                        this.p = pID;
-
-                        this.loading = false;
-                        this.listPage = true;
-                        this.detailPage = false;
-
-                        this.prev = (pID-1 > 0);
-                        this.next = (-(-pID)+1 <= this.ps);
-
-                        // console.log(this.ps, this.prev, this.next);
-
-                        return;
-                    }
+        /* --------------------------------------------------------------------------------- */
 
 
-                    console.log('pageID改变了');
+        // 文章详情组件, 如果在这里配置watch等，只会监听这个组件的，所以我将watch等放到了app里，这样所有的都会监听到
+        //    var detail = {
+        //        template: '<div>{{ $route.params.issuesID }} </div>'
+        //    };
 
-                    this.loading = true;
-                    this.listPage = false;
-                    this.detailPage = false;
-
-                    this.$http.get("https://api.github.com/repos/"+ _config['owner'] + "/"+ _config['repo'] + "/issues", {
-                        params: {
-                            filter: 'created',
-                            page: pID,
-                            per_page: _config['per_page']
-                        }
-                    }).then(function (response) {
-                        // 响应成功回调
-                        this.loading = false;
-                        this.listPage = true;
-                        this.detailPage = false;
-
-                        this.baseData = response.data;
-                        // console.log(response.data);
-                        console.log(response, response.headers.map.Link[0].indexOf('rel="prev"'));
-
-                        this.p = pID;
-
-                        this.prev = response.headers.map.Link[0].indexOf('rel="prev"') > 0 ;
-                        this.next = response.headers.map.Link[0].indexOf('rel="next"') > 0 ;
-
-                        // 将该页的所有内容存到数组中
-                        this.G.postList[this.p] = response.data;
-
-                        for (i in response.data) {
-                            this.G.post[response.data[i].number] = response.data[i];
-                        }
+        // 设置路由
+        var router = new VueRouter({
+            routes: [
+                {
+                    path: '/',
+                    name: 'home'
+                },
+                {
+                    path: '/detail/:issuesID',
+                    name: 'detail'
+                    // component: detail
+                    // 这里我可以不指定组件，一样可以建立路由,所以我决定将detail组件删除
+                },
+                {
+                    path: '/page/:pageID',
+                    name: 'page'
+                }
+            ]
+        })
 
 
-                    }, function (response) {
-                        // 响应错误回调
-                    });
 
+        // 注意：data里的数据要使用，必须return出来，在能在初始的时候使用
+        var app = new Vue({
+            router,
+            data: function () {
+                return {
+                    baseData: {},
+                    listPage: false,
+                    detailPage: false,
+                    loading: true,
+                    ps: 1,
+                    p: 1,
+                    prev: false,
+                    next: false,
+                    G: { post: {}, postList: {} },
+                    detailData: ''
                 }
             },
-            getPages: function () {
-                this.$http.get("https://api.github.com/repos/"+_config['owner']+"/"+_config['repo']).then(function (response) {
-                    this.ps = Math.ceil((response.data.open_issues)/_config['per_page']);
-                    console.log(this.ps, "这个是Pages");
-                }, function (response) {
-
-                });
+            watch: {
+                '$route': 'fetchList'
             },
-            con: function () {
-                console.log("created");
+            created: function () {
+                this.getPages();
+                this.fetchList();
+                this.con();
+            },
+            methods: {
+                fetchList: function () {
+
+                    console.log('路由变化');
+                    if (this.$route.params.issuesID) {
+
+                        var issID = this.$route.params.issuesID;
+
+                        if (this.G.post[issID] !== undefined) {
+                            //$('#detail').html(marked(this.G.post[issID].body));
+                            // this.$refs.detail.innerHTML(marked(this.G.post[issID].body));
+                            this.detailData = marked(this.G.post[issID].body);
+
+                            // DOM 还没有更新
+                            this.$nextTick(function () {
+                                // DOM 现在更新了
+                                hl(); //为生成的markdown添加代码高亮                                
+                            })
+
+                            this.loading = false;
+                            this.listPage = false;
+                            this.detailPage = true;
+
+                            return;
+                        }
+
+                        this.loading = true;
+                        this.listPage = false;
+                        this.detailPage = false;
+
+                        var _this = this;
+                        // this.$http.get("https://api.github.com/repos/" + _config['owner'] + "/" + _config['repo'] + "/issues/" + this.$route.params.issuesID).then(function (response) {
+                        service.get(_config['owner'] + "/" + _config['repo'] + "/issues/" + this.$route.params.issuesID).then(function (response) {
+
+                            _this.loading = false;
+                            _this.listPage = false;
+                            _this.detailPage = true;
+
+                            // 响应成功回调
+                            //$('#detail').html(marked(response.data.body)); // 将markdown转化为html
+                            _this.detailData = marked(response.data.body);
+
+                            // DOM 还没有更新
+                            _this.$nextTick(function () {
+                                // DOM 现在更新了
+                                // hl(); //为生成的markdown添加代码高亮
+                                var $codes = _this.$refs.detail.querySelectorAll('pre code');
+                                for (var i = 0, length = $codes.length; i < length; i++) {
+                                    hljs.highlightBlock($codes[i]);
+                                }
+                            })
+
+                        }, function (response) {
+                            // 响应错误回调
+                        });
+                    } else if (this.$route.params.pageID || true) {
+
+                        var pID = this.$route.params.pageID || 1;
+
+                        if (this.G.postList[pID] !== undefined) {
+                            this.baseData = this.G.postList[pID];
+                            this.p = pID;
+
+                            this.loading = false;
+                            this.listPage = true;
+                            this.detailPage = false;
+
+                            this.prev = (pID - 1 > 0);
+                            this.next = (-(-pID) + 1 <= this.ps);
+
+                            // console.log(this.ps, this.prev, this.next);
+
+                            return;
+                        }
+
+
+                        console.log('pageID改变了');
+
+                        this.loading = true;
+                        this.listPage = false;
+                        this.detailPage = false;
+
+                        var _this = this;
+                        // this.$http.get("https://api.github.com/repos/" + _config['owner'] + "/" + _config['repo'] + "/issues", {
+                        service.get(_config['owner'] + "/" + _config['repo'] + "/issues", {
+                            params: {
+                                filter: 'created',
+                                page: pID,
+                                per_page: _config['per_page']
+                            }
+                        }).then(function (response) {
+                            // 响应成功回调
+                            _this.loading = false;
+                            _this.listPage = true;
+                            _this.detailPage = false;
+
+                            _this.baseData = response.data;
+                            // console.log(response.data);
+                            // console.log(response, response.headers.map.Link[0].indexOf('rel="prev"'));
+
+                            _this.p = pID;
+
+                            // this.prev = response.headers.map.Link[0].indexOf('rel="prev"') > 0;
+                            // this.next = response.headers.map.Link[0].indexOf('rel="next"') > 0;
+
+                            _this.prev = response.headers.link.indexOf('rel="prev"') > 0;
+                            _this.next = response.headers.link.indexOf('rel="next"') > 0;
+
+                            // 将该页的所有内容存到数组中
+                            _this.G.postList[_this.p] = response.data;
+
+
+                            for (i in response.data) {
+                                _this.G.post[response.data[i].number] = response.data[i];
+                            }
+
+
+                        }, function (response) {
+                            // 响应错误回调
+                        });
+
+                    }
+                },
+                getPages: function () {
+                    var _this = this;
+                    // this.$http.get("https://api.github.com/repos/" + _config['owner'] + "/" + _config['repo']).then(function (response) {
+                    service.get(_config['owner'] + "/" + _config['repo']).then(function (response) {
+                        _this.ps = Math.ceil((response.data.open_issues) / _config['per_page']);
+                        console.log(_this.ps, "这个是Pages");
+                    }, function (response) {
+
+                    });
+                },
+                con: function () {
+                    console.log("created");
+                }
             }
-        }
-    }).$mount('#app')
+        }).$mount('#app')
 
 
 
 
-</script>
+    </script>
 </body>
+
 </html>
