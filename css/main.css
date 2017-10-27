@@ -1,6 +1,10 @@
 html, body {
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
+    background-color: #f6f6f6;
+    color: #212121;
+    line-height: 1.5;
 }
 * {
     box-sizing: border-box;    
@@ -13,7 +17,11 @@ ul {
 }
 
 a {
+    background-color: transparent;
+    background-image: none;
+    color: #3f51b5;
     text-decoration: none;
+    outline: 0;
 }
 
 .container {
@@ -48,9 +56,12 @@ a {
 .detail {
     width: 95%;
     margin: 0 auto;
-    padding: 10px;
-    border: 1px solid #d1d5da;
-    border-radius: 3px;
+    margin-top: -150px;
+    min-height: 100px;
+    padding: 35px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 #detail img {
@@ -91,22 +102,35 @@ pre>code.hljs::after {
     content: none;
 }
 
-.slide-fade-enter-active {
+
+.slide-fade-left-enter-active {
     transition: all .5s ease;
   }
-  .slide-fade-leave-active {
-    transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  .slide-fade-left-leave-active {
+    transition: all .5s ease;
   }
-  .slide-fade-enter, .slide-fade-leave-to
+  .slide-fade-left-enter, .slide-fade-left-leave-to
   /* .slide-fade-leave-active for below version 2.1.8 */ {
-    transform: translateX(10px);
-    opacity: 0;
+    transform: translateX(-100%);
+    /* opacity: 0; */
+  }
+
+.slide-fade-right-enter-active {
+    transition: all .5s ease;
+  }
+  .slide-fade-right-leave-active {
+    transition: all .5s ease;
+  }
+  .slide-fade-right-enter, .slide-fade-right-leave-to
+  /* .slide-fade-leave-active for below version 2.1.8 */ {
+    transform: translateX(100%);
+    /* opacity: 0; */
   }
 
 /* loading样式 动画参考：https://github.com/tobiasahlin/SpinKit */
 
 .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s
+    transition: opacity 1s
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
     opacity: 0
@@ -212,9 +236,9 @@ pre>code.hljs::after {
     }
   }
 
-.index .header {
+.header {
     position: fixed;
-    z-index: 3;
+    z-index: 4;
     top: 0;
     left: 0;
     width: 100%;
@@ -223,7 +247,7 @@ pre>code.hljs::after {
     text-align: center;
 }
 
-.index .header-bg .title {
+.header-bg .title {
     position: absolute;
     top: 104px;
     left: 0;
@@ -236,7 +260,7 @@ pre>code.hljs::after {
     font-weight: 500;
 }
 
-.index .header-bg {
+.header-bg {
     position: relative;
     z-index: 2;
     min-height: 210px;
@@ -244,7 +268,7 @@ pre>code.hljs::after {
     text-align: center;
 }
 
-.index .header .title {
+.header .title {
     position: absolute;
     top: 0;
     left: 0;
@@ -278,4 +302,57 @@ pre>code.hljs::after {
     display: block;
     padding: 5px;
     font-size: 12px;
+}
+
+.footer {
+    position: relative;
+    height: 130px;
+    margin: -130px auto 0;
+    color: rgba(255,255,255,0.6);
+    background: #2c3e50;
+    text-align: center;
+}
+
+.footer .top {
+    padding: 16px;
+    background: #495c6f;
+}
+
+.footer p {
+    margin: 0;
+    line-height: 1.6;
+    font-size: 13px;
+}
+
+.footer p span:not(:first-child):before {
+    content: "·";
+    padding: 0 .5em;
+}
+
+.footer p a {
+    border-bottom: 1px dotted rgba(255,255,255,0.5);
+    color: inherit;
+    opacity: .8;
+}
+
+.footer p a:hover {
+    color: #fff;
+    border-bottom: 1px solid rgba(255,255,255,.5);
+}
+
+.footer .bottom {
+    padding: 16px;
+}
+
+.main {
+    position: relative;
+    min-height: 100%;
+    padding-bottom: 130px;    
+}
+
+.index,
+.article {
+    position: absolute;
+    z-index: 3;
+    width: 100%;
 }

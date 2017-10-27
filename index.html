@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>vue-blog</title>
 
     <link href="vendor/highlight.js/styles/atom-one-dark.css" rel="stylesheet" />
@@ -26,41 +27,106 @@
 <body>
 
     <div id="app">
-        <div class="index">
-            <div class="header" ref="indexHeader">
-                <a class="title" href="#/" v-if="isSmTitle">我的个人博客</a>
-            </div>
-            <div class="header-bg">
-                <a class="title" href="#/" ref="indexTitle" v-if="!isSmTitle">我的个人博客</a>
-            </div>
-            <transition name="fade">
-                <div class="listPage container" v-show="listPage">
-                    <ul>
-                        <li v-for="item in baseData">
-                            <a class="blog-list-item" :href="'#/detail/' + item.number">{{ item.title }}</a>
-                        </li>
-                    </ul>
-                    <div class="page-num">
+        <div class="header" ref="indexHeader">
+            <a class="title" href="#/" v-if="isSmTitle">我的个人博客</a>
+        </div>
+        <div class="header-bg">
+            <a class="title" href="#/" ref="indexTitle" v-if="!isSmTitle">我的个人博客</a>
+        </div>
+        <transition name="slide-fade-left">
+            <div class="index" v-show="listPage">
+                <div class="main">
+                    <div class="listPage container">
                         <ul>
-                            <li :class="{'f': prev === false}">
-                                <a :href="'#/page/' + (parseInt(p)-1)">上一页</a>
-                            </li>
-                            <li v-for="n in ps">
-                                <a :href="'#/page/' + n">{{ n }}</a>
-                            </li>
-                            <li :class="{'f': next === false}">
-                                <a :href="'#/page/' + (parseInt(p)+1)">下一页</a>
+                            <li v-for="item in baseData">
+                                <a class="blog-list-item" :href="'#/detail/' + item.number">{{ item.title }}</a>
                             </li>
                         </ul>
+                        <div class="page-num">
+                            <ul>
+                                <li :class="{'f': prev === false}">
+                                    <a :href="'#/page/' + (parseInt(p)-1)">上一页</a>
+                                </li>
+                                <li v-for="n in ps">
+                                    <a :href="'#/page/' + n">{{ n }}</a>
+                                </li>
+                                <li :class="{'f': next === false}">
+                                    <a :href="'#/page/' + (parseInt(p)+1)">下一页</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <footer class="footer">
+                    <div class="top">
+                        <p>
+                            <span>
+                                站点总访客数：
+                                <span>32</span>
+                            </span>
+                            <span>
+                                站点总访问量：
+                                <span>132</span>
+                            </span>
+                        </p>
+                        <p>
+                            博客内容遵循
+                            <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </p>
+                    </div>
+                    <div class="bottom">
+                        <p>
+                            <span>
+                                Auven Zhang&nbsp;&copy;&nbsp;2017
+                            </span>
+                        </p>
+                    </div>
+                </footer>
+            </div>
+
+        </transition>
+
+
+        <transition name="slide-fade-right">
+            <div class="article" v-show="detailPage">
+                <div class="main">
+                    <div class="container">
+                        <div class="detail" v-html="detailData" ref="detail"></div>
                     </div>
                 </div>
-            </transition>
-            <transition name="slide-fade">
-                <div class="container" v-show="detailPage">
-                    <div class="detail" v-html="detailData" ref="detail"></div>
-                </div>
-            </transition>
-        </div>
+                <footer class="footer">
+                    <div class="top">
+                        <p>
+                            <span>
+                                站点总访客数：
+                                <span>32</span>
+                            </span>
+                            <span>
+                                站点总访问量：
+                                <span>132</span>
+                            </span>
+                        </p>
+                        <p>
+                            博客内容遵循
+                            <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </p>
+                    </div>
+                    <div class="bottom">
+                        <p>
+                            <span>
+                                Auven Zhang&nbsp;&copy;&nbsp;2017
+                            </span>
+                        </p>
+                    </div>
+                </footer>
+            </div>
+        </transition>
+
+
+
         <transition name="fade">
             <div class="loading" v-show="loading">
                 <div class="sk-folding-cube">

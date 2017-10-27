@@ -116,6 +116,8 @@ var app = new Vue({
             console.log('路由变化');
             if (this.$route.params.issuesID) {
 
+                document.documentElement.scrollTop = 0;
+
                 var issID = this.$route.params.issuesID;
 
                 if (this.G.post[issID] !== undefined) {
@@ -156,7 +158,7 @@ var app = new Vue({
                 }, function (response) {
                     // 响应错误回调
                 });
-            } else if (this.$route.params.pageID || true) {
+            } else {
 
                 var pID = this.$route.params.pageID || 1;
 
