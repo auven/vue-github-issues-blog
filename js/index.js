@@ -99,8 +99,10 @@ var app = new Vue({
             prev: false,
             next: false,
             G: { post: {}, postList: {} },
+            article: null,
             detailData: '',
-            isSmTitle: false
+            isSmTitle: false,
+            headerTitle: ''
         }
     },
     watch: {
@@ -121,7 +123,9 @@ var app = new Vue({
                 var issID = this.$route.params.issuesID;
 
                 if (this.G.post[issID] !== undefined) {
+                    this.article = this.G.post[issID];
                     this.detailData = marked(this.G.post[issID].body);
+                    this.headerTitle = this.article.title;
 
                     // DOM 还没有更新
                     this.$nextTick(function () {
@@ -147,7 +151,9 @@ var app = new Vue({
                     _this.listPage = false;
                     _this.detailPage = true;
 
+                    _this.article = response.data;
                     _this.detailData = marked(response.data.body);
+                    _this.headerTitle = _this.article.title;
 
                     // DOM 还没有更新
                     _this.$nextTick(function () {
@@ -159,6 +165,8 @@ var app = new Vue({
                     // 响应错误回调
                 });
             } else {
+
+                this.headerTitle = _config['owner'] + '的个人博客'
 
                 var pID = this.$route.params.pageID || 1;
 

@@ -28,10 +28,10 @@
 
     <div id="app">
         <div class="header" ref="indexHeader">
-            <a class="title" href="#/" v-if="isSmTitle">我的个人博客</a>
+            <a class="title" href="#/" v-if="isSmTitle">{{ headerTitle || '' }}</a>
         </div>
         <div class="header-bg">
-            <a class="title" href="#/" ref="indexTitle" v-if="!isSmTitle">我的个人博客</a>
+            <a class="title" href="#/" :style="{ visibility: detailPage ? 'hidden' : 'visible' }" ref="indexTitle" v-if="!isSmTitle">{{ headerTitle || '' }}</a>
         </div>
         <transition name="slide-fade-left">
             <div class="index" v-show="listPage">
@@ -47,14 +47,32 @@
                                 <li :class="{'f': prev === false}">
                                     <a :href="'#/page/' + (parseInt(p)-1)">上一页</a>
                                 </li>
+                                <li>
+                                    <a>...</a>
+                                </li>
                                 <li v-for="n in ps">
                                     <a :href="'#/page/' + n">{{ n }}</a>
+                                </li>
+                                <li>
+                                    <a>...</a>
                                 </li>
                                 <li :class="{'f': next === false}">
                                     <a :href="'#/page/' + (parseInt(p)+1)">下一页</a>
                                 </li>
                             </ul>
                         </div>
+
+                        <!-- 页码逻辑，左边两个，右边两个，两个之后，如果还有超过两个，就显示...，可以在js中使用数组的方式来做，在数组前面添加或后面添加 -->
+                        <nav class="page-nav">
+                            <div class="inner">
+                                <span class="page-number current waves-effect waves-button">1</span>
+                                <a class="page-number waves-effect waves-button" href="#/">2</a>
+                                <a class="page-number waves-effect waves-button" href="#/">3</a>
+                                <span class="space waves-effect waves-button">…</span>
+                                <a class="page-number waves-effect waves-button" href="#/">7</a>
+                                <a class="extend next waves-effect waves-button" rel="next" href="#/">下一页</a>
+                            </div>
+                        </nav>
                     </div>
 
 
@@ -94,7 +112,20 @@
             <div class="article" v-show="detailPage">
                 <div class="main">
                     <div class="container">
-                        <div class="detail" v-html="detailData" ref="detail"></div>
+                        <div class="detail">
+                            <div class="title-wrap">
+                                <div class="title">{{ article ? article.title : '' }}</div>
+                                <div class="post-meta">
+                                    <a class="post-author" :href="article ? article.user.html_url : ''">
+                                        <img :src="article ? article.user.avatar_url : ''">
+                                        <span>{{ article ? article.user.login : '' }}</span>
+                                    </a>
+                                    <span class="post-time">{{ article ? article.created_at.split(/T|Z/)[0] + ' ' + article.created_at.split(/T|Z/)[1] : '' }}</span>
+                                    <span class="post-visit">60</span>
+                                </div>
+                            </div>
+                            <div class="content" v-html="detailData" ref="detail"></div>
+                        </div>
                     </div>
                 </div>
                 <footer class="footer">

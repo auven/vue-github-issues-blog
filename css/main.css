@@ -56,7 +56,6 @@ a {
 .detail {
     width: 95%;
     margin: 0 auto;
-    margin-top: -150px;
     min-height: 100px;
     padding: 35px;
     background: #fff;
@@ -64,8 +63,8 @@ a {
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-#detail img {
-    width: 100%;
+.detail .content img {
+    max-width: 100%;
 }
 
 .f {
@@ -266,6 +265,7 @@ pre>code.hljs::after {
     min-height: 210px;
     background-color: #2c3e50;
     text-align: center;
+    overflow: hidden;
 }
 
 .header .title {
@@ -276,7 +276,7 @@ pre>code.hljs::after {
     text-decoration: none;
     color: #fff;
     height: 56px;
-    font-size: 24px;
+    font-size: 18px;
     line-height: 56px;
 }
 
@@ -355,4 +355,91 @@ pre>code.hljs::after {
     position: absolute;
     z-index: 3;
     width: 100%;
+}
+
+.article .title-wrap .title {
+    font-size: 32px;
+    line-height: 48px;
+    font-weight: 400;
+}
+
+.post-meta {
+    margin: 8px 0 10px;
+    line-height: 14px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #727272;
+    overflow: hidden;
+}
+
+.post-meta * {
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.post-meta>*:not(:first-child):before {
+    content: "·";
+    padding: 0 .5em;
+}
+
+.post-meta .post-author img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.post-meta .post-author {
+    color: inherit;
+}
+
+.post-meta .post-author span {
+    border-bottom: 1px dotted rgba(0,0,0,0.5);
+    line-height: 1.5;
+}
+
+.post-meta .post-author:hover span {
+    border-bottom: 1px dotted rgba(63, 81, 181,0.5);
+    color: #3f51b5;
+}
+
+.content {
+    padding-top: 20px;
+}
+
+.article .container {
+    margin-top: -150px;    
+}
+
+/* 页码 */
+.page-nav {
+    margin: 30px 0 0;
+    text-align: center;
+}
+
+.page-nav .inner {
+    display: inline-block;
+}
+
+.page-nav .current {
+    color: #fff;
+    background: #2c3e50;
+}
+
+.page-nav a, .page-nav span {
+    display: inline-block;
+    white-space: nowrap;
+    line-height: 34px;
+    padding: 0 1em;
+    margin: 0 2px;
+    font-size: 14px;
+    color: #727272;
+    border-radius: 3px;
+    overflow: hidden;
+    -webkit-transition: .4s ease-in-out;
+    transition: .4s ease-in-out;
+}
+
+.page-nav a:hover {
+    background: rgba(179, 177, 177, 0.5);
+    color: #2c3e50;
 }
