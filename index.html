@@ -47,9 +47,9 @@
                             <div class="inner">
                                 <a v-if="currentPage != 1" :href="'#/page/' + (+currentPage - 1)">上一页</a>
                                 <a :class="{ current: currentPage == 1 }" :href="currentPage == 1 ? 'javascript:;' : '#/page/1'">1</a>
-                                <a v-if="showPrevMore" class="more" :href="'#/page/' + (+currentPage - 5)">...</a>
+                                <a v-if="showPrevMore" class="more" :href="'#/page/' + ((+currentPage - 5) < 1 ? 1 : (+currentPage - 5))">...</a>
                                 <a v-for="pager in pagers" :class="{ current: currentPage == pager }" :href="currentPage == pager ? 'javascript:;' : '#/page/' + pager">{{ pager }}</a>
-                                <a v-if="showNextMore" class="more" :href="'#/page/' + (+currentPage + 5)">...</a>
+                                <a v-if="showNextMore" class="more" :href="'#/page/' + ((+currentPage + 5) > pageCount ? pageCount : (+currentPage + 5))">...</a>
                                 <a href="#/" v-if="pageCount > 1" :class="{ current: currentPage == pageCount }" :href="currentPage == pageCount ? 'javascript:;' : '#/page/' + pageCount">{{ pageCount }}</a>
                                 <a class="" rel="next" href="#/" v-if="currentPage != pageCount" :href="'#/page/' + (+currentPage + 1)">下一页</a>
                             </div>
