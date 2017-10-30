@@ -407,7 +407,8 @@ pre>code.hljs::after {
 }
 
 .article .container {
-    margin-top: -150px;    
+    margin-top: -150px;
+    min-height: calc(100vh - 190px);
 }
 
 /* 页码 */
@@ -442,4 +443,10 @@ pre>code.hljs::after {
 .page-nav a:hover {
     background: rgba(179, 177, 177, 0.5);
     color: #2c3e50;
+}
+
+.page-nav .current:hover {
+    color: #fff;
+    background: #2c3e50;
+    cursor: default
 }

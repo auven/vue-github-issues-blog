@@ -28,7 +28,7 @@ var EventUtil = {
         }
         arrayPageScroll = new Array(xScroll, yScroll);
         return arrayPageScroll;
-    }    
+    }
 };
 
 // 创建axios实例
@@ -39,7 +39,9 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use(config => {
-    config.headers['Authorization'] = _config['access_token']; // 让每个请求携带github token 请根据实际情况自行修改
+    if (_config['access_token']) {
+        config.headers['Authorization'] = _config['access_token']; // 让每个请求携带github token 请根据实际情况自行修改
+    }
     return config;
 }, error => {
     // Do something with request error
@@ -94,8 +96,10 @@ var app = new Vue({
             listPage: false,
             detailPage: false,
             loading: true,
-            ps: 1,
-            p: 1,
+            pageCount: 1,
+            currentPage: 1,
+            showPrevMore: false,
+            showNextMore: false,
             prev: false,
             next: false,
             G: { post: {}, postList: {} },
@@ -103,6 +107,50 @@ var app = new Vue({
             detailData: '',
             isSmTitle: false,
             headerTitle: ''
+        }
+    },
+    computed: {
+        // 计算页码
+        pagers() {
+            console.log('哈哈哈');
+            const pagerCount = 7;
+            const currentPage = Number(this.currentPage);
+            // const currentPage = Number(10);
+            const pageCount = Number(this.pageCount);
+            // const pageCount = Number(100);
+            let showPrevMore = false;
+            let showNextMore = false;
+            if (pageCount > pagerCount) {
+                if (currentPage > pagerCount - 3) {
+                    showPrevMore = true;
+                }
+                if (currentPage < pageCount - 3) {
+                    showNextMore = true;
+                }
+            }
+            const array = [];
+            if (showPrevMore && !showNextMore) {
+                const startPage = pageCount - (pagerCount - 2);
+                for (let i = startPage; i < pageCount; i++) {
+                    array.push(i);
+                }
+            } else if (!showPrevMore && showNextMore) {
+                for (let i = 2; i < pagerCount; i++) {
+                    array.push(i);
+                }
+            } else if (showPrevMore && showNextMore) {
+                const offset = Math.floor(pagerCount / 2) - 1;
+                for (let i = currentPage - offset; i <= currentPage + offset; i++) {
+                    array.push(i);
+                }
+            } else {
+                for (let i = 2; i < pageCount; i++) {
+                    array.push(i);
+                }
+            }
+            this.showPrevMore = showPrevMore;
+            this.showNextMore = showNextMore;
+            return array;
         }
     },
     watch: {
@@ -172,14 +220,14 @@ var app = new Vue({
 
                 if (this.G.postList[pID] !== undefined) {
                     this.baseData = this.G.postList[pID];
-                    this.p = pID;
+                    this.currentPage = pID;
 
                     this.loading = false;
                     this.listPage = true;
                     this.detailPage = false;
 
                     this.prev = (pID - 1 > 0);
-                    this.next = (-(-pID) + 1 <= this.ps);
+                    this.next = (-(-pID) + 1 <= this.pageCount);
                     return;
                 }
 
@@ -203,18 +251,17 @@ var app = new Vue({
                     _this.listPage = true;
                     _this.detailPage = false;
                     _this.baseData = response.data;
-                    _this.p = pID;
+                    _this.currentPage = pID;
                     _this.prev = response.headers.link.indexOf('rel="prev"') > 0;
                     _this.next = response.headers.link.indexOf('rel="next"') > 0;
 
                     // 将该页的所有内容存到数组中
-                    _this.G.postList[_this.p] = response.data;
+                    _this.G.postList[_this.currentPage] = response.data;
 
 
                     for (i in response.data) {
                         _this.G.post[response.data[i].number] = response.data[i];
                     }
-
 
                 }, function (response) {
                     // 响应错误回调
@@ -225,8 +272,9 @@ var app = new Vue({
         getPages: function () {
             var _this = this;
             service.get(_config['owner'] + "/" + _config['repo']).then(function (response) {
-                _this.ps = Math.ceil((response.data.open_issues) / _config['per_page']);
-                console.log(_this.ps, "这个是Pages");
+                _this.pageCount = Math.ceil((response.data.open_issues) / _config['per_page']);
+                console.log(_this.pageCount, "这个是Pages");
+                console.log(_this.pagers);
             }, function (response) {
 
             });
