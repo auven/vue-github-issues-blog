@@ -22,6 +22,9 @@
     <script type="text/javascript" src="vendor/highlight.js/highlight.pack.js"></script>
     <script type="text/javascript" src="config.js"></script>
 
+    <!-- 引入Gitment评论系统 -->
+    <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+
 </head>
 
 <body>
@@ -29,7 +32,9 @@
     <div id="app">
         <div class="header" ref="indexHeader">
             <span class="title" v-if="isSmTitle">{{ headerTitle || '' }}</span>
-            <span class="btn-back" v-if="detailPage" @click="back"><i class="icon-back"></i></span>            
+            <span class="btn-back" v-if="detailPage" @click="back">
+                <i class="icon-back"></i>
+            </span>
         </div>
         <div class="header-bg">
             <span class="title" :style="{ visibility: detailPage ? 'hidden' : 'visible' }" ref="indexTitle" v-if="!isSmTitle">{{ headerTitle || '' }}</span>
@@ -90,11 +95,14 @@
                                         <img :src="article ? article.user.avatar_url : ''">
                                         <span>{{ article ? article.user.login : '' }}</span>
                                     </a>
-                                    <span class="post-time">{{ article ? article.created_at.split(/T|Z/)[0] + ' ' + article.created_at.split(/T|Z/)[1] : '' }}</span>
+                                    <span class="post-time">{{ article ? article.created_at.split(/T|Z/)[0] + ' ' + article.created_at.split(/T|Z/)[1]
+                                        : '' }}</span>
                                 </div>
                             </div>
                             <div class="content" v-html="detailData" ref="detail"></div>
                         </div>
+
+                        <div id="comments"></div>
                     </div>
                 </div>
                 <footer class="footer">
@@ -128,6 +136,19 @@
     </div>
 
     <script src="js/index.js"></script>
+    <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            // id: '页面 ID', // 可选。默认为 location.href
+            owner: 'auven',
+            repo: 'blog-comment',
+            oauth: {
+                client_id: '2b4b72a134' + '03b5d7c71a',
+                client_secret: '5e27bafda0f46a0528bbb' + 'ec7a543d4fdd6047cb7',
+            },
+        })
+        gitment.render('comments')
+    </script>
 </body>
 
 </html>

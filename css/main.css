@@ -43,7 +43,8 @@ html, body {
     line-height: 1.5;
 }
 * {
-    box-sizing: border-box;    
+    box-sizing: border-box;
+    word-wrap: break-word;  /* 强制换行 */
 }
 
 ul {
