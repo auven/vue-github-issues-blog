@@ -22,10 +22,6 @@
     <script type="text/javascript" src="vendor/highlight.js/highlight.pack.js"></script>
     <script type="text/javascript" src="config.js"></script>
 
-    <!-- 不算子统计 -->
-    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-    </script>
-
 </head>
 
 <body>
@@ -65,24 +61,14 @@
                 </div>
 
                 <footer class="footer">
-                    <div class="top">
-                        <p>
-                            <span id="busuanzi_container_site_uv">
-                                站点总访客数：<span id="busuanzi_value_site_uv"></span>人次
-                              </span>
-                            <span id="busuanzi_container_site_pv">
-                                站点总访问量：<span id="busuanzi_value_site_pv"></span>次
-                            </span>
-                        </p>
-                        <p>
-                            博客内容遵循
-                            <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
-                        </p>
-                    </div>
-                    <div class="bottom">
+                    <div class="copyright">
                         <p>
                             <span>
                                 Auven Zhang&nbsp;&copy;&nbsp;2017
+                            </span>
+                            <span>
+                                博客内容遵循
+                                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
                             </span>
                         </p>
                     </div>
@@ -105,7 +91,6 @@
                                         <span>{{ article ? article.user.login : '' }}</span>
                                     </a>
                                     <span class="post-time">{{ article ? article.created_at.split(/T|Z/)[0] + ' ' + article.created_at.split(/T|Z/)[1] : '' }}</span>
-                                    <span class="post-visit"><i class="icon-eyes"></i>&nbsp;<span id="busuanzi_value_page_pv"></span></span>
                                 </div>
                             </div>
                             <div class="content" v-html="detailData" ref="detail"></div>
@@ -113,24 +98,14 @@
                     </div>
                 </div>
                 <footer class="footer">
-                    <div class="top">
-                        <p>
-                            <span id="busuanzi_container_site_uv">
-                                站点总访客数：<span id="busuanzi_value_site_uv"></span>人次
-                              </span>
-                            <span id="busuanzi_container_site_pv">
-                                站点总访问量：<span id="busuanzi_value_site_pv"></span>次
-                            </span>
-                        </p>
-                        <p>
-                            博客内容遵循
-                            <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
-                        </p>
-                    </div>
-                    <div class="bottom">
+                    <div class="copyright">
                         <p>
                             <span>
                                 Auven Zhang&nbsp;&copy;&nbsp;2017
+                            </span>
+                            <span>
+                                博客内容遵循
+                                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
                             </span>
                         </p>
                     </div>

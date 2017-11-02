@@ -74,20 +74,6 @@ a {
     }
 }
 
-.detail {
-    width: 95%;
-    margin: 0 auto;
-    min-height: 100px;
-    padding: 35px;
-    background: #fff;
-    border-radius: 4px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-.detail .content img {
-    max-width: 100%;
-}
-
 /* ==========
     highlight补充样式
  ========== */
@@ -299,6 +285,15 @@ pre>code.hljs::after {
     line-height: 56px;
 }
 
+.header-bg {
+    position: relative;
+    z-index: 2;
+    min-height: 210px;
+    background-color: #2c3e50;
+    text-align: center;
+    overflow: hidden;
+}
+
 .header-bg .title {
     position: absolute;
     top: 104px;
@@ -311,13 +306,18 @@ pre>code.hljs::after {
     font-weight: 500;
 }
 
-.header-bg {
-    position: relative;
-    z-index: 2;
-    min-height: 210px;
-    background-color: #2c3e50;
-    text-align: center;
-    overflow: hidden;
+@media screen and (max-width: 760px) {
+    .header-bg {
+        min-height: 150px;
+    }
+
+    .header-bg .title {
+        padding: 0 10px;        
+        top: 80px;
+        height: 30px;
+        font-size: 24px;
+        line-height: 30px;
+    }
 }
 
 /* ==========
@@ -334,7 +334,7 @@ pre>code.hljs::after {
 .main {
     position: relative;
     min-height: 100%;
-    padding-bottom: 130px;    
+    padding-bottom: 56px;    
 }
 
 .index .listPage .blog-list-item {
@@ -396,6 +396,38 @@ pre>code.hljs::after {
     font-weight: 400;
 }
 
+.detail {
+    width: 95%;
+    margin: 0 auto;
+    min-height: 100px;
+    padding: 35px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+@media screen and (max-width: 760px) {
+
+    .article .title-wrap .title {
+        font-size: 24px;
+        line-height: 1.5;
+        color: #fff;
+        padding: 10px 16px;
+    }
+
+    .detail {
+        width: 100%;
+        padding: 0;
+        background: none;
+        border-radius: none;
+        box-shadow: none;
+    }
+}
+
+.detail .content img {
+    max-width: 100%;
+}
+
 .post-meta {
     margin: 8px 0 10px;
     line-height: 14px;
@@ -403,6 +435,15 @@ pre>code.hljs::after {
     font-weight: bold;
     color: #727272;
     overflow: hidden;
+}
+
+@media screen and (max-width: 760px) {
+    .post-meta {
+        padding: 20px 12px;
+        background: #fff;
+        box-shadow: 0 1px 4px 0 rgba(0,0,0,0.16);
+        border-radius: 2px;
+    }
 }
 
 .post-meta * {
@@ -441,7 +482,14 @@ pre>code.hljs::after {
 
 .article .container {
     margin-top: -150px;
-    min-height: calc(100vh - 190px);
+    min-height: calc(100vh - 116px);
+}
+
+@media screen and (max-width: 760px) {
+    .article .container {
+        margin-top: -116px;
+        min-height: calc(100vh - 108px);
+    }
 }
 
 /* ==========
@@ -450,16 +498,15 @@ pre>code.hljs::after {
 
 .footer {
     position: relative;
-    height: 130px;
-    margin: -130px auto 0;
+    min-height: 56px;
+    margin: -56px auto 0;
     color: rgba(255,255,255,0.6);
     background: #2c3e50;
     text-align: center;
 }
 
-.footer .top {
+.footer .copyright {
     padding: 16px;
-    background: #495c6f;
 }
 
 .footer p {
@@ -482,8 +529,4 @@ pre>code.hljs::after {
 .footer p a:hover {
     color: #fff;
     border-bottom: 1px solid rgba(255,255,255,.5);
-}
-
-.footer .bottom {
-    padding: 16px;
 }
