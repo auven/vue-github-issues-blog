@@ -167,9 +167,6 @@ var app = new Vue({
             console.log('路由变化');
             if (this.$route.params.issuesID) {
 
-                // 进到文章页面之后就重新初始化评论
-                this.initComment();
-
                 document.documentElement.scrollTop ? document.documentElement.scrollTop = 0 : document.body.scrollTop = 0;
 
                 var issID = this.$route.params.issuesID;
@@ -178,6 +175,9 @@ var app = new Vue({
                     this.article = this.G.post[issID];
                     this.detailData = marked(this.G.post[issID].body);
                     this.headerTitle = this.article.title;
+
+                    // 进到文章页面之后就重新初始化评论
+                    this.initComment(this.headerTitle);
 
                     // DOM 还没有更新
                     this.$nextTick(function () {
@@ -206,6 +206,9 @@ var app = new Vue({
                     _this.article = response.data;
                     _this.detailData = marked(response.data.body);
                     _this.headerTitle = _this.article.title;
+
+                    // 进到文章页面之后就重新初始化评论
+                    _this.initComment(_this.headerTitle);
 
                     // DOM 还没有更新
                     _this.$nextTick(function () {
@@ -292,12 +295,13 @@ var app = new Vue({
         back: function () {
             window.history.back();
         },
-        initComment: function () {
+        initComment: function (pageTitle) {
             this.gitment = null;
             this.gitment = new Gitment({
                 // id: '页面 ID', // 可选。默认为 location.href
                 owner: 'auven',
                 repo: 'blog-comment',
+                title: pageTitle,
                 oauth: {
                     client_id: '2b4b72a134' + '03b5d7c71a',
                     client_secret: '5e27bafda0f46a0528bbb' + 'ec7a543d4fdd6047cb7',
