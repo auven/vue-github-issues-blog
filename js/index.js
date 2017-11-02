@@ -106,7 +106,8 @@ var app = new Vue({
             article: null,
             detailData: '',
             isSmTitle: false,
-            headerTitle: ''
+            headerTitle: '',
+            gitment: null
         }
     },
     computed: {
@@ -165,6 +166,9 @@ var app = new Vue({
 
             console.log('路由变化');
             if (this.$route.params.issuesID) {
+
+                // 进到文章页面之后就重新初始化评论
+                this.initComment();
 
                 document.documentElement.scrollTop ? document.documentElement.scrollTop = 0 : document.body.scrollTop = 0;
 
@@ -287,6 +291,19 @@ var app = new Vue({
         },
         back: function () {
             window.history.back();
+        },
+        initComment: function () {
+            this.gitment = null;
+            this.gitment = new Gitment({
+                // id: '页面 ID', // 可选。默认为 location.href
+                owner: 'auven',
+                repo: 'blog-comment',
+                oauth: {
+                    client_id: '2b4b72a134' + '03b5d7c71a',
+                    client_secret: '5e27bafda0f46a0528bbb' + 'ec7a543d4fdd6047cb7',
+                },
+            })
+            this.gitment.render('comments')
         }
     },
     mounted: function () {
@@ -298,6 +315,7 @@ var app = new Vue({
             } else {
                 _this.isSmTitle = false;
             }
-        })
+        });
+        this.initComment();
     }
 }).$mount('#app')
