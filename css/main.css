@@ -1,7 +1,43 @@
+/* ==========
+    滚动条样式
+ ========== */
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 8px;
+    height: 8px
+}
+
+::-webkit-scrollbar-track {
+    background-color: inherit
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #b6b6b6;
+    border: 1px solid #fff;
+    border-radius: 10px
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #9d9d9d
+}
+
+::-webkit-scrollbar-thumb:active {
+    background-color: #838383
+}
+
+::selection {
+    background: #d7dbf0
+}
+
+/* ==========
+    基础样式 
+ ========== */
+
 html, body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
+    overflow-x: hidden; /* 解决动画过度时网页底部出现横向滚动条 */
     background-color: #f6f6f6;
     color: #212121;
     line-height: 1.5;
@@ -38,21 +74,6 @@ a {
     }
 }
 
-
-#content {
-    max-width: 700px;
-    width: 95%;
-    margin: 0 auto;
-    box-sizing: border-box;
-    padding: 10px;
-    border: 1px solid #d1d5da;
-    border-radius: 3px;
-}
-
-#content img {
-    width: 100%;
-}
-
 .detail {
     width: 95%;
     margin: 0 auto;
@@ -67,9 +88,9 @@ a {
     max-width: 100%;
 }
 
-.f {
-    background: red;
-}
+/* ==========
+    highlight补充样式
+ ========== */
 
 code.hljs {
     border-radius: 3px;
@@ -101,6 +122,9 @@ pre>code.hljs::after {
     content: none;
 }
 
+/* ==========
+    页面过渡动画
+ ========== */
 
 .slide-fade-left-enter-active {
     transition: all .5s ease;
@@ -126,7 +150,9 @@ pre>code.hljs::after {
     /* opacity: 0; */
   }
 
-/* loading样式 动画参考：https://github.com/tobiasahlin/SpinKit */
+/* ==========
+    loading样式 动画参考：https://github.com/tobiasahlin/SpinKit
+ ========== */
 
 .fade-enter-active, .fade-leave-active {
     transition: opacity 1s
@@ -235,6 +261,10 @@ pre>code.hljs::after {
     }
   }
 
+/* ==========
+    页头样式
+ ========== */
+
 .header {
     position: fixed;
     z-index: 4;
@@ -246,12 +276,34 @@ pre>code.hljs::after {
     text-align: center;
 }
 
+.header .btn-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #fff;
+    cursor: pointer;
+    height: 56px;
+    width: 56px;
+    font-size: 18px;
+    line-height: 56px;
+}
+
+.header .title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    color: #fff;
+    height: 56px;
+    font-size: 18px;
+    line-height: 56px;
+}
+
 .header-bg .title {
     position: absolute;
     top: 104px;
     left: 0;
     width: 100%;
-    text-decoration: none;
     color: #fff;
     font-size: 44px;
     line-height: 56px;
@@ -268,16 +320,21 @@ pre>code.hljs::after {
     overflow: hidden;
 }
 
-.header .title {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    text-decoration: none;
-    color: #fff;
-    height: 56px;
-    font-size: 18px;
-    line-height: 56px;
+/* ==========
+    博客列表页
+ ========== */
+
+.index,
+.article {
+     position: absolute;
+     z-index: 3;
+     width: 100%;
+}
+
+.main {
+    position: relative;
+    min-height: 100%;
+    padding-bottom: 130px;    
 }
 
 .index .listPage .blog-list-item {
@@ -289,75 +346,51 @@ pre>code.hljs::after {
     border-radius: 3px;
 }
 
-.page-num {
+/* 页码 */
+.page-nav {
+    margin: 30px 0 0;
     text-align: center;
 }
 
-.page-num li {
+.page-nav .inner {
     display: inline-block;
-    margin: 0 5px;    
 }
 
-.page-num li a {
-    display: block;
-    padding: 5px;
-    font-size: 12px;
-}
-
-.footer {
-    position: relative;
-    height: 130px;
-    margin: -130px auto 0;
-    color: rgba(255,255,255,0.6);
-    background: #2c3e50;
-    text-align: center;
-}
-
-.footer .top {
-    padding: 16px;
-    background: #495c6f;
-}
-
-.footer p {
-    margin: 0;
-    line-height: 1.6;
-    font-size: 13px;
-}
-
-.footer p span:not(:first-child):before {
-    content: "·";
-    padding: 0 .5em;
-}
-
-.footer p a {
-    border-bottom: 1px dotted rgba(255,255,255,0.5);
-    color: inherit;
-    opacity: .8;
-}
-
-.footer p a:hover {
+.page-nav .current {
     color: #fff;
-    border-bottom: 1px solid rgba(255,255,255,.5);
+    background: #2c3e50;
 }
 
-.footer .bottom {
-    padding: 16px;
+.page-nav a, .page-nav span {
+    display: inline-block;
+    white-space: nowrap;
+    line-height: 34px;
+    padding: 0 1em;
+    margin: 0 2px;
+    font-size: 14px;
+    color: #727272;
+    border-radius: 3px;
+    overflow: hidden;
+    -webkit-transition: .4s ease-in-out;
+    transition: .4s ease-in-out;
 }
 
-.main {
-    position: relative;
-    min-height: 100%;
-    padding-bottom: 130px;    
+.page-nav a:hover {
+    background: rgba(179, 177, 177, 0.5);
+    color: #2c3e50;
 }
 
-.index,
-.article {
-    position: absolute;
-    z-index: 3;
-    width: 100%;
+.page-nav .current:hover {
+    color: #fff;
+    background: #2c3e50;
+    cursor: default
 }
 
-.article .title-wrap .title {
+/* ==========
+    文章页
+ ========== */
+
+ .article .title-wrap .title {
     font-size: 32px;
     line-height: 48px;
     font-weight: 400;
@@ -411,42 +444,46 @@ pre>code.hljs::after {
     min-height: calc(100vh - 190px);
 }
 
-/* 页码 */
-.page-nav {
-    margin: 30px 0 0;
+/* ==========
+    页脚样式
+ ========== */
+
+.footer {
+    position: relative;
+    height: 130px;
+    margin: -130px auto 0;
+    color: rgba(255,255,255,0.6);
+    background: #2c3e50;
     text-align: center;
 }
 
-.page-nav .inner {
-    display: inline-block;
+.footer .top {
+    padding: 16px;
+    background: #495c6f;
 }
 
-.page-nav .current {
+.footer p {
+    margin: 0;
+    line-height: 1.6;
+    font-size: 13px;
+}
+
+.footer p span:not(:first-child):before {
+    content: "·";
+    padding: 0 .5em;
+}
+
+.footer p a {
+    border-bottom: 1px dotted rgba(255,255,255,0.5);
+    color: inherit;
+    opacity: .8;
+}
+
+.footer p a:hover {
     color: #fff;
-    background: #2c3e50;
+    border-bottom: 1px solid rgba(255,255,255,.5);
 }
 
-.page-nav a, .page-nav span {
-    display: inline-block;
-    white-space: nowrap;
-    line-height: 34px;
-    padding: 0 1em;
-    margin: 0 2px;
-    font-size: 14px;
-    color: #727272;
-    border-radius: 3px;
-    overflow: hidden;
-    -webkit-transition: .4s ease-in-out;
-    transition: .4s ease-in-out;
-}
-
-.page-nav a:hover {
-    background: rgba(179, 177, 177, 0.5);
-    color: #2c3e50;
-}
-
-.page-nav .current:hover {
-    color: #fff;
-    background: #2c3e50;
-    cursor: default
+.footer .bottom {
+    padding: 16px;
 }

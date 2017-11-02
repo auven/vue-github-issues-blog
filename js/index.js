@@ -166,7 +166,7 @@ var app = new Vue({
             console.log('路由变化');
             if (this.$route.params.issuesID) {
 
-                document.documentElement.scrollTop = 0;
+                document.documentElement.scrollTop ? document.documentElement.scrollTop = 0 : document.body.scrollTop = 0;
 
                 var issID = this.$route.params.issuesID;
 
@@ -284,6 +284,9 @@ var app = new Vue({
             for (var i = 0, length = $codes.length; i < length; i++) {
                 hljs.highlightBlock($codes[i]);
             }
+        },
+        back: function () {
+            window.history.back();
         }
     },
     mounted: function () {
