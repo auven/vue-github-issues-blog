@@ -320,6 +320,5 @@ var app = new Vue({
                 _this.isSmTitle = false;
             }
         });
-        this.initComment();
     }
 }).$mount('#app')
