@@ -531,3 +531,8 @@ pre>code.hljs::after {
     color: #fff;
     border-bottom: 1px solid rgba(255,255,255,.5);
 }
+
+/* gitment样式补充 */
+.gitment-comment-main, .gitment-editor-main {
+    background: #fff;
+}
