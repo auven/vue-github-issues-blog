@@ -454,12 +454,6 @@ var app = new Vue({
                             if (imgObj.complete) {
                                 clearInterval(timer);
                                 imgEl.setAttribute('data-size', imgObj.width + 'x' + imgObj.height);
-                                if (imgObj.width >= imgObj.height) {
-                                    imgEl.height = imgItem.clientHeight;
-                                }
-                                if (imgObj.width < imgObj.height) {
-                                    imgEl.width = imgItem.clientWidth;
-                                }
 
                                 imgState[i] = true;
                                 // 所有图片加载完成
