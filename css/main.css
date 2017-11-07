@@ -427,6 +427,7 @@ pre>code.hljs::after {
 
 .detail .content img {
     max-width: 100%;
+    display: block;
 }
 
 .post-meta {
@@ -461,6 +462,7 @@ pre>code.hljs::after {
     width: 20px;
     height: 20px;
     border-radius: 50%;
+    box-shadow: 0 0 1px 1px rgba(0,0,0,.1);
 }
 
 .post-meta .post-author {

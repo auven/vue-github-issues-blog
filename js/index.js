@@ -31,6 +31,127 @@ var EventUtil = {
     }
 };
 
+
+var SetPswp = function ($galleryEl) {
+    this.$galleryEl = $galleryEl;
+    this.$galleryEl.setAttribute('data-pswp-uid', 1);
+    // 预览器元素    
+    this.$pswpElement = document.querySelector('.pswp');
+    this.create();
+}
+
+SetPswp.prototype = {
+    // 图片元素集合
+    $imgs: null,
+    // ps实例
+    gallery: null,
+    // ps图片集
+    items: null,
+    // ps相关设置
+    options: null,
+    // 初始化
+    create: function () {
+        var _this = this;
+        this.$galleryEl.onclick = function (e) {
+            console.log('hahaha');
+            e = e || window.event;
+            e.preventDefault ? e.preventDefault() : e.returnValue = false;
+    
+            // 这里获取的就是我们点击的图片
+            var eTarget = e.target || e.srcElement;
+            console.log('点击的图片', eTarget);
+            _this.onThumbnailsClick(eTarget);
+        }
+        var _this = this;
+        this.options = {
+            barsSize: {
+                top: 100,
+                bottom: 100
+            },
+            fullscreenEl: false,
+            shareButtons: [
+                { id: 'wechat', label: '分享微信', url: '#' },
+                { id: 'weibo', label: '新浪微博', url: '#' },
+                { id: 'download', label: '保存图片', url: '{{raw_image_url}}', download: true }
+            ],
+
+            // 不添加点击图片历史记录
+            history: false,
+
+            // define gallery index (for URL)
+            galleryUID: _this.$galleryEl.getAttribute('data-pswp-uid'),
+
+            getThumbBoundsFn: function (index) {
+                // See Options -> getThumbBoundsFn section of documentation for more info
+                var thumbnail = _this.items[index].el; // find thumbnail
+                var pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
+                var rect = thumbnail.getBoundingClientRect();
+
+                return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };
+            }
+        };
+    },
+    // 当用户点击缩略图触发
+    onThumbnailsClick: function (eTarget) {
+        // 如果点击的不是图片，就不做处理
+        if (eTarget.tagName.toUpperCase() !== 'IMG') {
+            return;
+        }
+
+        // 通过遍历所有包含data-size的子节点查找点击的图片的索引
+        // alternatively, you may define index via data- attribute
+        var $imgs = this.$imgs;
+        var numChildNodes = $imgs.length;
+        var nodeIndex = 0;
+        var index;
+
+        for (var i = 0; i < numChildNodes; i++) {
+            if ($imgs[i].nodeType !== 1) {
+                continue;
+            }
+
+            if ($imgs[i] === eTarget) {
+                index = nodeIndex;
+                break;
+            }
+            nodeIndex++;
+        }
+
+        if (index >= 0) {
+            // open PhotoSwipe if valid index found
+            this.openPhotoSwipe(index);
+        }
+        return false;
+    },
+    openPhotoSwipe: function (index) {
+        this.options.index = parseInt(index, 10);
+        // exit if index not found
+        if (isNaN(this.options.index)) {
+            return;
+        }
+        this.gallery = new PhotoSwipe(this.$pswpElement, PhotoSwipeUI_Default, this.items, this.options);
+        this.gallery.init();
+    },
+    init: function () {
+        this.$imgs = this.$galleryEl.querySelectorAll('img');
+        this.items = [];
+        var numNodes = this.$imgs.length;
+        var size, item, imgEl;
+        for (var i = 0; i < numNodes; i++) {
+            imgEl = this.$imgs[i];
+            size = imgEl.getAttribute('data-size').split('x');
+            // 创建幻灯片对象
+            item = {
+                src: imgEl.getAttribute('src'),
+                w: parseInt(size[0], 10),
+                h: parseInt(size[1], 10),
+                el: imgEl
+            };
+            this.items.push(item);
+        }
+    }
+};
+
 // 创建axios实例
 const service = axios.create({
     baseURL: 'https://api.github.com/repos/', // api的base_url
@@ -107,7 +228,8 @@ var app = new Vue({
             detailData: '',
             isSmTitle: false,
             headerTitle: '',
-            gitment: null
+            gitment: null,
+            setPswp: null
         }
     },
     computed: {
@@ -183,6 +305,7 @@ var app = new Vue({
                     this.$nextTick(function () {
                         // DOM 现在更新了
                         this.hl(this.$refs.detail);
+                        this.initImgbox(this.$refs.detail);
                     })
 
                     this.loading = false;
@@ -214,6 +337,7 @@ var app = new Vue({
                     _this.$nextTick(function () {
                         // DOM 现在更新了
                         _this.hl(_this.$refs.detail);
+                        _this.initImgbox(_this.$refs.detail);
                     })
 
                 }, function (response) {
@@ -308,6 +432,55 @@ var app = new Vue({
                 },
             })
             this.gitment.render('comments')
+        },
+        // 初始化图片盒子
+        initImgbox: function ($detail) {
+            var _this = this;
+            var $imgList = $detail.querySelectorAll('img'),
+                length = $imgList.length;
+            // 存储图片加载状态
+            var imgState = [];
+            for (var i = 0; i < length; i++) {
+                (function (i) {
+                    var imgEl = $imgList[i];
+                    var imgItem = imgEl.parentNode;
+                    var imgSrc = imgEl.src;
+                    var timer = null;
+                    var load = function (src) {
+                        var imgObj = new Image();
+                        imgObj.src = src;
+                        timer = setInterval(function () {
+                            // console.log('加载第 ' + i + ' 张图片循环中');
+                            if (imgObj.complete) {
+                                clearInterval(timer);
+                                imgEl.setAttribute('data-size', imgObj.width + 'x' + imgObj.height);
+                                if (imgObj.width >= imgObj.height) {
+                                    imgEl.height = imgItem.clientHeight;
+                                }
+                                if (imgObj.width < imgObj.height) {
+                                    imgEl.width = imgItem.clientWidth;
+                                }
+
+                                imgState[i] = true;
+                                // 所有图片加载完成
+                                var allLoaded = true;
+                                for (var j = 0; j < length; j++) {
+                                    if (!imgState[j]) {
+                                        allLoaded = false;
+                                        break;
+                                    }
+                                }
+                                // console.log('第 ' + i + ' 张图片加载完成');                                
+                                if (allLoaded) {
+                                    // console.log('所有图片加载完成');
+                                    _this.setPswp.init();
+                                }
+                            }
+                        }, 80);
+                    };
+                    load(imgSrc);
+                })(i);
+            }
         }
     },
     mounted: function () {
@@ -320,5 +493,9 @@ var app = new Vue({
                 _this.isSmTitle = false;
             }
         });
+        this.$nextTick(function () {
+            // DOM 现在更新了
+            this.setPswp = new SetPswp(this.$refs.detail);
+        });
     }
-}).$mount('#app')
+}).$mount('#app');

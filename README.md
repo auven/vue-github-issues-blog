@@ -15,16 +15,19 @@
 - [x] markdown语法编译
 - [x] 代码高亮
 - [ ] 按标签分类博客
-- [ ] 响应式
-- [ ] 评论系统
-- [ ] 图片预览
+- [x] 响应式
+- [x] 评论系统
+- [x] 图片预览
 - [ ] 分享
 - [ ] 搜索
 
 ## 使用到的框架和插件
 
 - 框架
-  - vue
+  - [vue](https://github.com/vuejs/vue) v2.5.2
 - 插件
-  - marked
-  - highlight.js
+  - [vue-router](https://github.com/vuejs/vue-router) v3.0.1
+  - [axios](https://github.com/axios/axios) v0.17.0
+  - [marked](https://github.com/chjj/marked) v0.3.6
+  - [highlight.js](https://github.com/isagalaev/highlight.js) v9.12.0
+  - [PhotoSwipe](https://github.com/dimsemenov/PhotoSwipe) v4.1.2
