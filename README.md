@@ -31,3 +31,5 @@
   - [marked](https://github.com/chjj/marked) v0.3.6
   - [highlight.js](https://github.com/isagalaev/highlight.js) v9.12.0
   - [PhotoSwipe](https://github.com/dimsemenov/PhotoSwipe) v4.1.2
+  - [gitment](https://github.com/imsun/gitment) v0.0.3
+  - [anchorjs](https://github.com/bryanbraun/anchorjs) v4.1.0

@@ -32,12 +32,18 @@ var EventUtil = {
 };
 
 
+// 锚点设置
+anchors.options = {
+    visible: 'always',
+    icon: '¶'
+};
+
 var SetPswp = function ($galleryEl) {
     this.$galleryEl = $galleryEl;
     this.$galleryEl.setAttribute('data-pswp-uid', 1);
     // 预览器元素    
     this.$pswpElement = document.querySelector('.pswp');
-    this.create();
+    this.init();
 }
 
 SetPswp.prototype = {
@@ -50,16 +56,14 @@ SetPswp.prototype = {
     // ps相关设置
     options: null,
     // 初始化
-    create: function () {
+    init: function () {
         var _this = this;
         this.$galleryEl.onclick = function (e) {
-            console.log('hahaha');
             e = e || window.event;
             e.preventDefault ? e.preventDefault() : e.returnValue = false;
-    
+
             // 这里获取的就是我们点击的图片
             var eTarget = e.target || e.srcElement;
-            console.log('点击的图片', eTarget);
             _this.onThumbnailsClick(eTarget);
         }
         var _this = this;
@@ -98,29 +102,32 @@ SetPswp.prototype = {
             return;
         }
 
-        // 通过遍历所有包含data-size的子节点查找点击的图片的索引
-        // alternatively, you may define index via data- attribute
-        var $imgs = this.$imgs;
-        var numChildNodes = $imgs.length;
-        var nodeIndex = 0;
-        var index;
+        // 如果已经初始化完成才继续执行
+        if (this.$imgs) {
+            // 通过遍历所有图片查找点击的图片的索引
+            var $imgs = this.$imgs;
+            var numChildNodes = $imgs.length;
+            var nodeIndex = 0;
+            var index;
 
-        for (var i = 0; i < numChildNodes; i++) {
-            if ($imgs[i].nodeType !== 1) {
-                continue;
+            for (var i = 0; i < numChildNodes; i++) {
+                if ($imgs[i].nodeType !== 1) {
+                    continue;
+                }
+
+                if ($imgs[i] === eTarget) {
+                    index = nodeIndex;
+                    break;
+                }
+                nodeIndex++;
             }
 
-            if ($imgs[i] === eTarget) {
-                index = nodeIndex;
-                break;
+            if (index >= 0) {
+                // open PhotoSwipe if valid index found
+                this.openPhotoSwipe(index);
             }
-            nodeIndex++;
         }
 
-        if (index >= 0) {
-            // open PhotoSwipe if valid index found
-            this.openPhotoSwipe(index);
-        }
         return false;
     },
     openPhotoSwipe: function (index) {
@@ -132,7 +139,7 @@ SetPswp.prototype = {
         this.gallery = new PhotoSwipe(this.$pswpElement, PhotoSwipeUI_Default, this.items, this.options);
         this.gallery.init();
     },
-    init: function () {
+    create: function () {
         this.$imgs = this.$galleryEl.querySelectorAll('img');
         this.items = [];
         var numNodes = this.$imgs.length;
@@ -149,6 +156,10 @@ SetPswp.prototype = {
             };
             this.items.push(item);
         }
+    },
+    // 销毁函数
+    destroy: function () {
+        this.$imgs = null;
     }
 };
 
@@ -235,7 +246,6 @@ var app = new Vue({
     computed: {
         // 计算页码
         pagers() {
-            console.log('哈哈哈');
             const pagerCount = 7;
             const currentPage = Number(this.currentPage);
             // const currentPage = Number(10);
@@ -285,8 +295,6 @@ var app = new Vue({
     },
     methods: {
         fetchList: function () {
-
-            console.log('路由变化');
             if (this.$route.params.issuesID) {
 
                 document.documentElement.scrollTop ? document.documentElement.scrollTop = 0 : document.body.scrollTop = 0;
@@ -301,10 +309,14 @@ var app = new Vue({
                     // 进到文章页面之后就重新初始化评论
                     this.initComment(this.headerTitle);
 
+                    // 销毁ps
+                    this.setPswp.destroy();
+
                     // DOM 还没有更新
                     this.$nextTick(function () {
                         // DOM 现在更新了
                         this.hl(this.$refs.detail);
+                        anchors.add();
                         this.initImgbox(this.$refs.detail);
                     })
 
@@ -333,10 +345,14 @@ var app = new Vue({
                     // 进到文章页面之后就重新初始化评论
                     _this.initComment(_this.headerTitle);
 
+                    // 销毁ps
+                    _this.setPswp.destroy();
+
                     // DOM 还没有更新
                     _this.$nextTick(function () {
                         // DOM 现在更新了
                         _this.hl(_this.$refs.detail);
+                        anchors.add();
                         _this.initImgbox(_this.$refs.detail);
                     })
 
@@ -361,9 +377,6 @@ var app = new Vue({
                     this.next = (-(-pID) + 1 <= this.pageCount);
                     return;
                 }
-
-
-                console.log('pageID改变了');
 
                 this.loading = true;
                 this.listPage = false;
@@ -404,8 +417,6 @@ var app = new Vue({
             var _this = this;
             service.get(_config['owner'] + "/" + _config['repo']).then(function (response) {
                 _this.pageCount = Math.ceil((response.data.open_issues) / _config['per_page']);
-                console.log(_this.pageCount, "这个是Pages");
-                console.log(_this.pagers);
             }, function (response) {
 
             });
@@ -467,7 +478,7 @@ var app = new Vue({
                                 // console.log('第 ' + i + ' 张图片加载完成');                                
                                 if (allLoaded) {
                                     // console.log('所有图片加载完成');
-                                    _this.setPswp.init();
+                                    _this.setPswp.create();
                                 }
                             }
                         }, 80);

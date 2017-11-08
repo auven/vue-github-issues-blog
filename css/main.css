@@ -109,6 +109,22 @@ pre>code.hljs::after {
     content: none;
 }
 
+blockquote {
+    padding: 0 1em;
+    color: #6a737d;
+    border-left: 0.25em solid #2c3e50;
+    margin: 0;
+    font-size: 14px;
+}
+
+/* ==========
+    anchorjs样式
+ ========== */
+
+.anchorjs-link {
+    color: #c5cae9;
+}
+
 /* ==========
     页面过渡动画
  ========== */
