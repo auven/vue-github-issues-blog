@@ -118,11 +118,19 @@
 
         <transition name="fade">
             <div class="loading" v-show="loading">
-                <div class="sk-folding-cube">
+                <!-- <div class="sk-folding-cube">
                     <div class="sk-cube1 sk-cube"></div>
                     <div class="sk-cube2 sk-cube"></div>
                     <div class="sk-cube4 sk-cube"></div>
                     <div class="sk-cube3 sk-cube"></div>
+                </div> -->
+                <div class="mikepad-loading">
+                    <div class="binding"></div>
+                    <div class="pad">
+                        <div class="line line1"></div>
+                        <div class="line line2"></div>
+                        <div class="line line3"></div>
+                    </div>
                 </div>
             </div>
         </transition>
@@ -196,15 +204,15 @@
     </div>
 
 
-    <script src="vendor/vue/vue.min.js"></script>    
-    <script src="vendor/vue-router/vue-router.min.js"></script>    
+    <script src="vendor/vue/vue.min.js"></script>
+    <script src="vendor/vue-router/vue-router.min.js"></script>
     <script src="vendor/axios/axios.min.js"></script>
 
     <script type="text/javascript" src="vendor/marked/marked.min.js"></script>
     <script type="text/javascript" src="vendor/highlight.js/highlight.pack.js"></script>
     <script type="text/javascript" src="config.js"></script>
 
-    <script src="vendor/gitment/gitment.browser.js"></script>    
+    <script src="vendor/gitment/gitment.browser.js"></script>
 
     <script src="vendor/PhotoSwipe/photoswipe.min.js"></script>
     <script src="vendor/PhotoSwipe/photoswipe-ui-default.min.js"></script>
