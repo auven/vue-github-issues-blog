@@ -82,7 +82,7 @@
                     <div class="container">
                         <div class="detail">
                             <div class="title-wrap">
-                                <div class="title">{{ article ? article.title : '' }}</div>
+                                <div class="title" :style="{ visibility: isSmTitle ? 'hidden' : 'visible' }">{{ article ? article.title : '' }}</div>
                                 <div class="post-meta">
                                     <a class="post-author" :href="article ? article.user.html_url : ''">
                                         <img :src="article ? article.user.avatar_url : ''">
