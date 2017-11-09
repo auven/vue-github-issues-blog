@@ -31,7 +31,6 @@ var EventUtil = {
     }
 };
 
-
 // 锚点设置
 anchors.options = {
     visible: 'always',
@@ -162,24 +161,6 @@ SetPswp.prototype = {
         this.$imgs = null;
     }
 };
-
-// 创建axios实例
-const service = axios.create({
-    baseURL: 'https://api.github.com/repos/', // api的base_url
-    timeout: 15000                  // 请求超时时间
-});
-
-// request拦截器
-service.interceptors.request.use(config => {
-    if (_config['access_token']) {
-        config.headers['Authorization'] = _config['access_token']; // 让每个请求携带github token 请根据实际情况自行修改
-    }
-    return config;
-}, error => {
-    // Do something with request error
-    console.log(error); // for debug
-    Promise.reject(error);
-})
 
 /* -------------------------------------------------------------------------------*/
 
@@ -332,7 +313,7 @@ var app = new Vue({
                 this.detailPage = false;
 
                 var _this = this;
-                service.get(_config['owner'] + "/" + _config['repo'] + "/issues/" + this.$route.params.issuesID).then(function (response) {
+                issues.getOne(this.$route.params.issuesID).then(function (response) {
 
                     _this.loading = false;
                     _this.listPage = false;
@@ -383,13 +364,7 @@ var app = new Vue({
                 this.detailPage = false;
 
                 var _this = this;
-                service.get(_config['owner'] + "/" + _config['repo'] + "/issues", {
-                    params: {
-                        filter: 'created',
-                        page: pID,
-                        per_page: _config['per_page']
-                    }
-                }).then(function (response) {
+                issues.list(pID).then(function (response) {
                     // 响应成功回调
                     _this.loading = false;
                     _this.listPage = true;
@@ -415,7 +390,8 @@ var app = new Vue({
         },
         getPages: function () {
             var _this = this;
-            service.get(_config['owner'] + "/" + _config['repo']).then(function (response) {
+            // 获取开放issue的数量
+            issues.count().then(function (response) {
                 _this.pageCount = Math.ceil((response.data.open_issues) / _config['per_page']);
             }, function (response) {
 
@@ -502,5 +478,6 @@ var app = new Vue({
             // DOM 现在更新了
             this.setPswp = new SetPswp(this.$refs.detail);
         });
+        issues.labels();
     }
 }).$mount('#app');
