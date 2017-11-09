@@ -21,7 +21,7 @@ const issues = {
     list: function (pID) {
         return service.get(_config['owner'] + "/" + _config['repo'] + "/issues", {
             params: {
-                creator: _config['onlyOwner'] ? _config['owner'] : null,
+                creator: _config['owner'],
                 page: pID,
                 per_page: _config['per_page']
             }
@@ -34,9 +34,5 @@ const issues = {
     // https://developer.github.com/v3/issues/#get-a-single-issue
     getOne: function (id) {
         return service.get(_config['owner'] + "/" + _config['repo'] + "/issues/" + id)
-    },
-    // https://developer.github.com/v3/repos/#get
-    count: function () {
-        return service.get(_config['owner'] + "/" + _config['repo'])
     }
 }

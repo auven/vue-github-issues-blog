@@ -209,7 +209,7 @@ var app = new Vue({
             listPage: false,
             detailPage: false,
             loading: true,
-            pageCount: 1,
+            pageCount: 0,
             currentPage: 1,
             showPrevMore: false,
             showNextMore: false,
@@ -271,7 +271,6 @@ var app = new Vue({
         '$route': 'fetchList'
     },
     created: function () {
-        this.getPages();
         this.fetchList();
     },
     methods: {
@@ -354,8 +353,6 @@ var app = new Vue({
                     this.listPage = true;
                     this.detailPage = false;
 
-                    this.prev = (pID - 1 > 0);
-                    this.next = (-(-pID) + 1 <= this.pageCount);
                     return;
                 }
 
@@ -365,14 +362,30 @@ var app = new Vue({
 
                 var _this = this;
                 issues.list(pID).then(function (response) {
+                    // 如果没有页码就获取页码
+                    if (!_this.pageCount) {
+                        // console.log('获取页码');
+                        const link = response.headers.link.split(',');
+                        // 是不是最后一页
+                        var isLastPage = true;
+                        for (let i = 0; i < link.length; i++) {
+                            if (/last/.test(link[i])) {
+                                _this.pageCount = link[i].match(/\?.*?(?=>)/)[0].substr(1).match(/(^|&)page=([^&]*)(&|$)/)[2];
+                                isLastPage = false;
+                                break;
+                            }
+                        }
+                        if (isLastPage) {
+                            _this.pageCount = pID;
+                        }
+                    }
+                    
                     // 响应成功回调
                     _this.loading = false;
                     _this.listPage = true;
                     _this.detailPage = false;
                     _this.baseData = response.data;
                     _this.currentPage = pID;
-                    _this.prev = response.headers.link.indexOf('rel="prev"') > 0;
-                    _this.next = response.headers.link.indexOf('rel="next"') > 0;
 
                     // 将该页的所有内容存到数组中
                     _this.G.postList[_this.currentPage] = response.data;
@@ -387,15 +400,6 @@ var app = new Vue({
                 });
 
             }
-        },
-        getPages: function () {
-            var _this = this;
-            // 获取开放issue的数量
-            issues.count().then(function (response) {
-                _this.pageCount = Math.ceil((response.data.open_issues) / _config['per_page']);
-            }, function (response) {
-
-            });
         },
         hl: function ($elm) {
             var $codes = $elm.querySelectorAll('code');

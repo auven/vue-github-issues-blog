@@ -9,7 +9,5 @@ var _config = {
     // icp备案号 ICP_license: 京ICP备1234556号-1
     ICP_license: false,
     // 设置为 true 发布后将使用 unpkg cdn
-    cdn: false,
-    // 是否只显示本人的issue
-    onlyOwner: false
+    cdn: false
 }
