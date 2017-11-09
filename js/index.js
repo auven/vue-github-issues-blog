@@ -137,6 +137,14 @@ SetPswp.prototype = {
         }
         this.gallery = new PhotoSwipe(this.$pswpElement, PhotoSwipeUI_Default, this.items, this.options);
         this.gallery.init();
+        var _this = this;
+        // Gallery starts closing
+        this.gallery.listen('close', function () {
+            console.log('关闭弹窗');
+            _this.removePopstateHandler();
+            window.history.back();
+        });
+        this.addPopstateHandler();
     },
     create: function () {
         this.$imgs = this.$galleryEl.querySelectorAll('img');
@@ -159,6 +167,31 @@ SetPswp.prototype = {
     // 销毁函数
     destroy: function () {
         this.$imgs = null;
+    },
+    // 添加返回事件监听
+    addPopstateHandler: function () {
+        console.log('添加返回事件监听');
+        var _this = this;
+        window.addEventListener('popstate', this.closeModal, false);
+        console.log(location.href);
+        window.history.pushState({}, '');
+    },
+    // 移除返回事件监听
+    removePopstateHandler: function () {
+        console.log('移除返回事件监听');
+        window.removeEventListener('popstate', this.closeModal, false);
+    },
+    // 关闭弹窗
+    closeModal: function (e) {
+        // 既然没办法限制默认的后退事件，那么我这里就给它再添加一次state，然后关闭的时候在close；
+        if (e) {
+            window.history.pushState({}, '');
+        }
+        // window.history.back();
+        // 关闭图片
+        if (window.setPswp) {
+            window.setPswp.gallery.close();
+        }
     }
 };
 
@@ -275,6 +308,11 @@ var app = new Vue({
     },
     methods: {
         fetchList: function () {
+            if (window.setPswp) {
+                // 销毁ps
+                window.setPswp.destroy();
+            }
+
             if (this.$route.params.issuesID) {
 
                 document.documentElement.scrollTop ? document.documentElement.scrollTop = 0 : document.body.scrollTop = 0;
@@ -288,9 +326,6 @@ var app = new Vue({
 
                     // 进到文章页面之后就重新初始化评论
                     this.initComment(this.headerTitle);
-
-                    // 销毁ps
-                    this.setPswp.destroy();
 
                     // DOM 还没有更新
                     this.$nextTick(function () {
@@ -324,9 +359,6 @@ var app = new Vue({
 
                     // 进到文章页面之后就重新初始化评论
                     _this.initComment(_this.headerTitle);
-
-                    // 销毁ps
-                    _this.setPswp.destroy();
 
                     // DOM 还没有更新
                     _this.$nextTick(function () {
@@ -379,7 +411,7 @@ var app = new Vue({
                             _this.pageCount = pID;
                         }
                     }
-                    
+
                     // 响应成功回调
                     _this.loading = false;
                     _this.listPage = true;
@@ -458,7 +490,7 @@ var app = new Vue({
                                 // console.log('第 ' + i + ' 张图片加载完成');                                
                                 if (allLoaded) {
                                     // console.log('所有图片加载完成');
-                                    _this.setPswp.create();
+                                    window.setPswp.create();
                                 }
                             }
                         }, 80);
@@ -480,7 +512,7 @@ var app = new Vue({
         });
         this.$nextTick(function () {
             // DOM 现在更新了
-            this.setPswp = new SetPswp(this.$refs.detail);
+            window.setPswp = new SetPswp(this.$refs.detail);
         });
         issues.labels();
     }
