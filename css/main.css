@@ -458,8 +458,76 @@ blockquote {
     padding: 10px 20px;
     margin-bottom: 20px;
     color: #333;
-    border: 1px solid #d1d5da;
+    padding: 16px 20px 0;
+    background: #fff;
     border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(151,151,151,0.58);
+}
+
+.index .listPage .blog-list-item .title {
+    margin: 0 0 16px;
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 400;
+}
+
+.index .listPage .blog-list-item .title a {
+    position: relative;
+    display: inline-block;
+}
+
+.index .listPage .blog-list-item .title a::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #3f51b5;
+    -webkit-transform: scaleX(0);
+    transform: scaleX(0);
+    -webkit-transition: .4s ease-in-out;
+    transition: .4s ease-in-out;
+}
+
+.index .listPage .blog-list-item .title a:hover::after {
+    visibility: visible;
+    -webkit-transform: scaleX(1);
+    transform: scaleX(1)
+}
+
+.index .listPage .blog-list-item .list-content {
+    word-break: break-all;
+    padding-bottom: 20px;
+    line-height: 1.8;
+    font-size: 14px;
+}
+
+.index .listPage .blog-list-item .list-content a {
+    display: inline-block;
+    padding: 0 6px;
+    border-radius: 3px;
+    transition: all .2s;
+}
+
+.index .listPage .blog-list-item .list-content a:hover,
+.index .listPage .blog-list-item .list-content a:active {
+    background: #eaecf7
+}
+
+.index .listPage .blog-list-item .label {
+    margin: 0 -20px;
+    padding: 12px 20px 8px;
+    border-top: 1px solid #ddd;
+}
+
+.index .listPage .blog-list-item .label span {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 4px 16px;
+    font-size: 14px;
+    border-radius: .2em;
+    margin: 5px;
 }
 
 /* 页码 */
@@ -597,8 +665,33 @@ blockquote {
     color: #3f51b5;
 }
 
+.detail .label,
 .content {
     padding-top: 20px;
+}
+
+.detail .label {
+    font-size: 0;
+}
+
+.detail .label .icon {
+    display: inline-block;
+    vertical-align: middle;
+    color: #2c3e50;
+    font-size: 16px;
+    margin: 2px 5px;
+}
+
+.detail .label .label-item {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 3px 4px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    border-radius: 2px;
+    box-shadow: inset 0 -1px 0 rgba(27,31,35,0.12);
+    margin: 2px;
 }
 
 .article .container {

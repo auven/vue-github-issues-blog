@@ -254,7 +254,8 @@ var app = new Vue({
             isSmTitle: false,
             headerTitle: '',
             gitment: null,
-            setPswp: null
+            setPswp: null,
+            acticleLabel: []
         }
     },
     computed: {
@@ -321,6 +322,7 @@ var app = new Vue({
 
                 if (this.G.post[issID] !== undefined) {
                     this.article = this.G.post[issID];
+                    this.acticleLabel = this.article.labels;
                     this.detailData = marked(this.G.post[issID].body);
                     this.headerTitle = this.article.title;
 
@@ -354,6 +356,7 @@ var app = new Vue({
                     _this.detailPage = true;
 
                     _this.article = response.data;
+                    _this.acticleLabel = _this.article.labels;
                     _this.detailData = marked(response.data.body);
                     _this.headerTitle = _this.article.title;
 
@@ -395,7 +398,7 @@ var app = new Vue({
                 var _this = this;
                 issues.list(pID).then(function (response) {
                     // 如果没有页码就获取页码
-                    if (!_this.pageCount) {
+                    if (!_this.pageCount && response.headers.link) {
                         // console.log('获取页码');
                         const link = response.headers.link.split(',');
                         // 是不是最后一页
@@ -410,6 +413,8 @@ var app = new Vue({
                         if (isLastPage) {
                             _this.pageCount = pID;
                         }
+                    } else {
+                        _this.pageCount = pID;
                     }
 
                     // 响应成功回调

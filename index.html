@@ -38,7 +38,15 @@
                     <div class="listPage container">
                         <ul>
                             <li v-for="item in baseData">
-                                <a class="blog-list-item" :href="'#/detail/' + item.number">{{ item.title }}</a>
+                                <article class="blog-list-item">
+                                    <h3 class="title">
+                                        <a :href="'#/detail/' + item.number">{{ item.title }}</a>
+                                    </h3>
+                                    <div class="list-content">{{ item.body.substring(0, 200) }}{{ item.body.length > 200 ? '...' : ''}}<a :href="'#/detail/' + item.number" v-if="item.body.length > 200">阅读全文...</a></div>
+                                    <div class="label">
+                                        <span v-for="label in item.labels" :style="{background: '#' + label.color}">{{ label.name }}</span>
+                                    </div>
+                                </article>
                             </li>
                         </ul>
                         <!-- 页码逻辑，左边两个，右边两个，两个之后，如果还有超过两个，就显示...，可以在js中使用数组的方式来做，在数组前面添加或后面添加 -->
@@ -91,6 +99,10 @@
                                     <span class="post-time">{{ article ? article.created_at.split(/T|Z/)[0] + ' ' + article.created_at.split(/T|Z/)[1]
                                         : '' }}</span>
                                 </div>
+                            </div>
+                            <div class="label">
+                                <span class="icon"><i class="icon-label"></i></span>
+                                <span class="label-item" v-for="label in acticleLabel" :style="{background: '#' + label.color}">{{ label.name }}</span>
                             </div>
                             <div class="content" v-html="detailData" ref="detail"></div>
                         </div>
