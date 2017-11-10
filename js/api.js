@@ -15,10 +15,11 @@ service.interceptors.request.use(config => {
 
 const issues = {
     // https://developer.github.com/v3/issues/#list-issues-for-a-repository
-    list: function (pID) {
+    list: function (label, pID) {
         return service.get(_config['owner'] + "/" + _config['repo'] + "/issues", {
             params: {
                 creator: _config['owner'],
+                labels: label,
                 page: pID,
                 per_page: _config['per_page'],
                 client_id: _config['client_id'],

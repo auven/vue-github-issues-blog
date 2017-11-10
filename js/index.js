@@ -255,7 +255,9 @@ var app = new Vue({
             headerTitle: '',
             gitment: null,
             setPswp: null,
-            acticleLabel: []
+            acticleLabel: [],
+            allLabel: [],
+            label: ''
         }
     },
     computed: {
@@ -306,6 +308,7 @@ var app = new Vue({
     },
     created: function () {
         this.fetchList();
+        this.getAllLabel();
     },
     methods: {
         fetchList: function () {
@@ -378,9 +381,12 @@ var app = new Vue({
 
                 this.headerTitle = _config['owner'] + '的个人博客'
 
+                // 当前页
                 var pID = this.$route.params.pageID || 1;
+                // 获取label参数
+                var label = this.$route.query.label || '';
 
-                if (this.G.postList[pID] !== undefined) {
+                if (this.G.postList[pID] !== undefined && this.G.postList['label'] === label) {
                     this.baseData = this.G.postList[pID];
                     this.currentPage = pID;
 
@@ -391,14 +397,15 @@ var app = new Vue({
                     return;
                 }
 
+
                 this.loading = true;
                 this.listPage = false;
                 this.detailPage = false;
 
                 var _this = this;
-                issues.list(pID).then(function (response) {
+                issues.list(label, pID).then(function (response) {
                     // 如果没有页码就获取页码
-                    if (!_this.pageCount && response.headers.link) {
+                    if (response.headers.link) {
                         // console.log('获取页码');
                         const link = response.headers.link.split(',');
                         // 是不是最后一页
@@ -423,10 +430,16 @@ var app = new Vue({
                     _this.detailPage = false;
                     _this.baseData = response.data;
                     _this.currentPage = pID;
+                    _this.label = label;
+
+                    if (label !== _this.G.postList['label']) {
+                        // 清空
+                        _this.G.postList = {};
+                        _this.G.postList['label'] = label;
+                    }
 
                     // 将该页的所有内容存到数组中
                     _this.G.postList[_this.currentPage] = response.data;
-
 
                     for (i in response.data) {
                         _this.G.post[response.data[i].number] = response.data[i];
@@ -502,6 +515,27 @@ var app = new Vue({
                     };
                     load(imgSrc);
                 })(i);
+            }
+        },
+        // 获取label
+        getAllLabel: function () {
+            var _this = this;
+            issues.labels().then(function (response) {
+                console.log(response);
+                _this.allLabel = response.data;
+            })
+        },
+        // 通过label获取issues
+        selectLabel: function (label) {
+            console.log(label);
+            router.push({ name: 'page', params: { pageID: 1 }, query: { label: label } })
+        },
+        // 切换页码
+        changePage: function (page) {
+            if (this.label) {
+                router.push({ name: 'page', params: { pageID: page }, query: { label: this.label } })
+            } else {
+                router.push({ name: 'page', params: { pageID: page } })
             }
         }
     },

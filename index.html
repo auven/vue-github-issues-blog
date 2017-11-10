@@ -36,6 +36,10 @@
             <div class="index" v-show="listPage">
                 <div class="main">
                     <div class="listPage container">
+                        <div class="label-select">
+                            <span class="icon"><i class="icon-label"></i></span>
+                            <span class="label" v-for="label in allLabel" :style="{background: '#' + label.color}" @click="selectLabel(label.name)">{{ label.name }}</span>
+                        </div>
                         <ul>
                             <li v-for="item in baseData">
                                 <article class="blog-list-item">
@@ -43,22 +47,22 @@
                                         <a :href="'#/detail/' + item.number">{{ item.title }}</a>
                                     </h3>
                                     <div class="list-content">{{ item.body.substring(0, 200) }}{{ item.body.length > 200 ? '...' : ''}}<a :href="'#/detail/' + item.number" v-if="item.body.length > 200">阅读全文...</a></div>
-                                    <div class="label">
+                                    <div class="label" v-if="item.labels.length">
                                         <span v-for="label in item.labels" :style="{background: '#' + label.color}">{{ label.name }}</span>
                                     </div>
                                 </article>
                             </li>
                         </ul>
                         <!-- 页码逻辑，左边两个，右边两个，两个之后，如果还有超过两个，就显示...，可以在js中使用数组的方式来做，在数组前面添加或后面添加 -->
-                        <nav class="page-nav">
+                        <nav class="page-nav" v-if="baseData.length">
                             <div class="inner">
-                                <a v-if="currentPage != 1" :href="'#/page/' + (+currentPage - 1)">上一页</a>
-                                <a :class="{ current: currentPage == 1 }" :href="currentPage == 1 ? 'javascript:;' : '#/page/1'">1</a>
-                                <a v-if="showPrevMore" class="more" :href="'#/page/' + ((+currentPage - 5) < 1 ? 1 : (+currentPage - 5))">...</a>
-                                <a v-for="pager in pagers" :class="{ current: currentPage == pager }" :href="currentPage == pager ? 'javascript:;' : '#/page/' + pager">{{ pager }}</a>
-                                <a v-if="showNextMore" class="more" :href="'#/page/' + ((+currentPage + 5) > pageCount ? pageCount : (+currentPage + 5))">...</a>
-                                <a href="#/" v-if="pageCount > 1" :class="{ current: currentPage == pageCount }" :href="currentPage == pageCount ? 'javascript:;' : '#/page/' + pageCount">{{ pageCount }}</a>
-                                <a class="" rel="next" href="#/" v-if="currentPage != pageCount" :href="'#/page/' + (+currentPage + 1)">下一页</a>
+                                <span v-if="currentPage != 1" @click="changePage(+currentPage - 1)">上一页</span>
+                                <span :class="{ current: currentPage == 1 }" @click="changePage(currentPage == 1 ? false : 1)">1</span>
+                                <span v-if="showPrevMore" class="more" @click="changePage((+currentPage - 5) < 1 ? 1 : (+currentPage - 5))">...</span>
+                                <span v-for="pager in pagers" :class="{ current: currentPage == pager }" @click="changePage(currentPage == pager ? false : pager)">{{ pager }}</span>
+                                <span v-if="showNextMore" class="more" @click="changePage((+currentPage + 5) > pageCount ? pageCount : (+currentPage + 5))">...</span>
+                                <span href="#/" v-if="pageCount > 1" :class="{ current: currentPage == pageCount }" @click="changePage(currentPage == pageCount ? false : pageCount)">{{ pageCount }}</span>
+                                <span class="" rel="next" href="#/" v-if="currentPage != pageCount" @click="changePage(+currentPage + 1)">下一页</span>
                             </div>
                         </nav>
                     </div>
@@ -100,7 +104,7 @@
                                         : '' }}</span>
                                 </div>
                             </div>
-                            <div class="label">
+                            <div class="label" v-if="acticleLabel.length">
                                 <span class="icon"><i class="icon-label"></i></span>
                                 <span class="label-item" v-for="label in acticleLabel" :style="{background: '#' + label.color}">{{ label.name }}</span>
                             </div>

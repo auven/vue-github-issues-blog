@@ -453,6 +453,36 @@ blockquote {
     padding-bottom: 56px;    
 }
 
+.index .listPage {
+    min-height: calc(100vh - 266px);
+}
+
+@media screen and (max-width: 760px) {
+    .index .listPage {
+        min-height: calc(100vh - 224px);
+    }
+}
+
+.index .listPage .label-select {
+    margin-bottom: 20px;
+}
+
+.index .listPage .label-select span {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 4px 16px;
+    font-size: 14px;
+    border-radius: .2em;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.index .listPage .label-select .icon {
+    font-size: 20px;
+    padding: 4px 8px;
+    cursor: default;
+}
+
 .index .listPage .blog-list-item {
     display: block;
     padding: 10px 20px;
@@ -545,7 +575,7 @@ blockquote {
     background: #2c3e50;
 }
 
-.page-nav a, .page-nav span {
+.page-nav span {
     display: inline-block;
     white-space: nowrap;
     line-height: 34px;
@@ -557,6 +587,7 @@ blockquote {
     overflow: hidden;
     -webkit-transition: .4s ease-in-out;
     transition: .4s ease-in-out;
+    cursor: pointer;
 }
 
 .page-nav a:hover {
