@@ -6,9 +6,6 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use(config => {
-    if (_config['access_token']) {
-        config.headers['Authorization'] = _config['access_token']; // 让每个请求携带github token 请根据实际情况自行修改
-    }
     return config;
 }, error => {
     // Do something with request error
@@ -23,16 +20,28 @@ const issues = {
             params: {
                 creator: _config['owner'],
                 page: pID,
-                per_page: _config['per_page']
+                per_page: _config['per_page'],
+                client_id: _config['client_id'],
+                client_secret: _config['client_secret'],
             }
         })
     },
     // https://developer.github.com/v3/issues/labels/#list-all-labels-for-this-repository
     labels: function () {
-        return service.get(_config['owner'] + "/" + _config['repo'] + "/labels")
+        return service.get(_config['owner'] + "/" + _config['repo'] + "/labels", {
+            params: {
+                client_id: _config['client_id'],
+                client_secret: _config['client_secret'],
+            }
+        })
     },
     // https://developer.github.com/v3/issues/#get-a-single-issue
     getOne: function (id) {
-        return service.get(_config['owner'] + "/" + _config['repo'] + "/issues/" + id)
+        return service.get(_config['owner'] + "/" + _config['repo'] + "/issues/" + id, {
+            params: {
+                client_id: _config['client_id'],
+                client_secret: _config['client_secret'],
+            }
+        })
     }
 }

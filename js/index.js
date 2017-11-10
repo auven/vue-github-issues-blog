@@ -450,8 +450,8 @@ var app = new Vue({
                 repo: 'blog-comment',
                 title: pageTitle,
                 oauth: {
-                    client_id: '2b4b72a134' + '03b5d7c71a',
-                    client_secret: '5e27bafda0f46a0528bbb' + 'ec7a543d4fdd6047cb7',
+                    client_id: _config['client_id'],
+                    client_secret: _config['client_secret'],
                 },
             })
             this.gitment.render('comments')
@@ -514,6 +514,6 @@ var app = new Vue({
             // DOM 现在更新了
             window.setPswp = new SetPswp(this.$refs.detail);
         });
-        issues.labels();
+        // issues.labels();
     }
 }).$mount('#app');
