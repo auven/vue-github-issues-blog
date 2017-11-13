@@ -1,7 +1,7 @@
 var _config = {
     blog_name       : '用于演示的博客',         // 博客名称
-    owner           : 'auven',           // github 用户名
-    repo            : 'blog',// github 中对应项目名
+    owner           : 'laizimo',           // github 用户名
+    repo            : 'zimo-article',// github 中对应项目名
     per_page        : '10',                    // 默认一页显示几篇文章
     // 版权起始年份
     since_year: 2015,
