@@ -508,7 +508,7 @@ var app = new Vue({
         distractionFreeMode: false
       })
 
-      gitalk.render('gitalk-container')
+      this.gitalk.render('gitalk-container')
     },
     // 初始化图片盒子
     initImgbox: function($detail) {
