@@ -501,8 +501,8 @@ var app = new Vue({
       this.gitalk = new Gitalk({
         clientID: _config['client_id'],
         clientSecret: _config['client_secret'],
-        repo: 'auven',
-        owner: 'blog-comment',
+        repo: 'blog-comment',
+        owner: 'auven',
         admin: ['auven'],
         title: pageTitle,
         distractionFreeMode: false
