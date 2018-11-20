@@ -9,6 +9,7 @@ var _config = {
     ICP_license: false,
     // 设置为 true 发布后将使用 unpkg cdn
     cdn: false,
-    client_id: '2b4b72a13403b5d7c71a',
-    client_secret: '5e27bafda0f46a0528bbbec7a543d4fdd6047cb7',
+    // gitalk 配置
+    client_id: '1e401efd17c830cfcfe2',
+    client_secret: '7f8e1108070d5faa43bf4823f7077f229910d419',
 }
