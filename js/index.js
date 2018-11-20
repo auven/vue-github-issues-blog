@@ -504,7 +504,7 @@ var app = new Vue({
         repo: 'blog-comment',
         owner: 'auven',
         admin: ['auven'],
-        title: md5(pageTitle),
+        title: MD5(pageTitle),
         distractionFreeMode: false
       })
 
